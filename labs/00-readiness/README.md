@@ -1,5 +1,11 @@
 # Lab 00: Readiness
 
+> **Why this lab:** A working setup means you spend the day building, not
+> installing. You also pick the Java or .NET track you will use for the rest
+> of the labs.
+>
+> **Time:** before the event, then 15 minutes in the room.
+
 Complete this lab before the event. The checks report missing prerequisites with
 remediation guidance; they never install software, authenticate accounts, or
 create Azure resources.

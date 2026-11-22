@@ -1,5 +1,11 @@
 # Lab 06: Deterministic CI and agentic QA
 
+> **Why this lab:** Agents can review code and suggest fixes, but repeatable
+> CI still decides what merges. Here you add agentic QA without weakening that
+> check.
+>
+> **Time:** 20 minutes.
+
 Add two guarded quality workflows without replacing conventional CI:
 
 - pull-request QA that reviews changed code, specification evidence, tests, and

@@ -1,5 +1,10 @@
 # Lab 07: Capstone
 
+> **Why this lab:** You put the day's pieces together into something you can
+> show, built in the way that works best for your team.
+>
+> **Time:** 20 minutes.
+
 Combine one or more pathways into a small, demonstrable outcome. Your team
 chooses the domain; the workshop does not assign a service, ministry, or policy
 area. Keep the slice low risk, use synthetic data, and make the engineering
