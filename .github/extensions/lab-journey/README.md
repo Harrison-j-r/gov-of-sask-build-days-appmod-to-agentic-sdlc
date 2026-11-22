@@ -25,6 +25,12 @@ any directory-changing commands before running a copied block yourself.
 PowerShell/Bash alternatives follow the shell selection. Source views preserve
 the canonical alternatives and explicitly marked placeholders.
 
+The header includes the README's Day 1 rationale. Each lab offers its
+source-backed **Why this lab** note, timebox, and starting context. Lab 04
+includes the shared three-step AppMod framework before the selected track's
+steps. Source tables remain readable, and existing step IDs and private
+progress are preserved when this shared context is added.
+
 Mark checkpoints Done or Blocked only after doing the exercise yourself.
 These are navigation reminders, not test results, approval records, or CI.
 No prompts are sent and no commands, deployments, or GitHub writes run here.
@@ -93,7 +99,7 @@ safety, navigation, reset/resume, narrow layout, themes, and reduced motion.
 Use `LAB_GUIDE_BROWSER` for another installed Playwright browser channel or
 `LAB_GUIDE_BROWSER_PATH` for an explicit browser executable path.
 
-Authoring checks observed on Windows: all 11 core tests and the real Edge
+Authoring checks observed on Windows: all 13 core tests and the real Edge
 browser gate passed. Module syntax, whitespace, and changed Markdown local
 targets passed. Runtime discovery/open/actions, invalid-input and reserved
 action rejection, and saved motion preference across provider reload and a
@@ -109,7 +115,7 @@ text GitHub integration link rather than reproducing restricted logo artwork.
 The guide is workshop material, not an official GitHub product or endorsement.
 No runtime fonts, images, libraries, or analytics are downloaded.
 
-The renderer supports headings, lists, inline code/emphasis, links, and fenced
+The renderer supports headings, lists, tables, inline code/emphasis, links, and fenced
 blocks. Other Markdown is displayed as escaped text; raw HTML cannot execute.
 Some local links are intentionally not interactive: open those targets in
 your checkout. For complete formatting or facilitator-led recovery, consult

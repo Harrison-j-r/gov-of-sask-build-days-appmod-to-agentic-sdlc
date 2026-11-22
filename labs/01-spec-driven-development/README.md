@@ -1,5 +1,11 @@
 # Lab 01: Spec-driven development with Plan mode
 
+> **Why this lab:** Agents do better work when the goal, limits, and checks
+> are written down first. The spec you write here guides the modernization in
+> Lab 04 and the workflows in Lab 05.
+>
+> **Time:** 20 minutes.
+
 Turn one small modernization need into a reviewed, durable specification before
 asking an agent to change application code. You will use GitHub Copilot app Plan
 mode to inspect a legacy application, clarify the intended change, refine a

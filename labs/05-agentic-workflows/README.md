@@ -1,5 +1,11 @@
 # Lab 05: Agentic SDLC workflows
 
+> **Why this lab:** GitHub Agentic Workflows move work from a spec to issues
+> to draft pull requests without you driving every step. Guardrails keep a
+> person in control of what gets merged.
+>
+> **Time:** 20 minutes.
+
 Build a guarded path from an approved specification to reviewable backlog
 issues, then from one explicitly activated issue to a validated draft pull
 request. The workflows use the GitHub Copilot engine and GitHub Agentic

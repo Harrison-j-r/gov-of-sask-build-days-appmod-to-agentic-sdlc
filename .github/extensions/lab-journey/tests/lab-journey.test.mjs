@@ -33,13 +33,45 @@ test("all eight labs resolve for each track; source blocks remain exact", async 
                 for (const [, body] of blocks) assert.ok(source.replace(/\r\n/g, "\n").includes(body), `${step.id}: exact source block`);
             }
         }
-        assert.ok(labs[4].steps.every((step) => step.source.includes(`/${track}/`)));
+        assert.ok(labs[4].steps.every((step) => step.source.includes(`/${track}/`) || step.source === labs[4].source));
         const readiness = labs[0].steps.find((step) => step.title === "3. Run your track check");
         assert.ok(readiness.body.includes(`check-${track}`));
         assert.ok(!readiness.body.includes(`check-${track === "java" ? "dotnet" : "java"}`));
     }
     assert.ok(guide.safety.some((rule) => rule.includes("ResponseInputStream")));
     assert.ok(guide.safety.some((rule) => rule.includes("v0.89.21")));
+});
+
+test("updated Day 1 rationale, lab introductions, and shared AppMod framework stay source-backed", async () => {
+    const readme = await readSource(root, "README.md");
+    assert.ok(readme.replace(/\r\n/g, "\n").includes(guide.orientation.body));
+    assert.match(guide.orientation.body, /Day 2/);
+    for (const track of ["java", "dotnet"]) {
+        for (const lab of guide.tracks[track]) {
+            const source = await readSource(root, lab.source);
+            assert.ok(source.replace(/\r\n/g, "\n").includes(lab.intro));
+            assert.match(lab.intro, /Why this lab/);
+            assert.match(lab.intro, /Time/);
+        }
+        const framework = guide.tracks[track][4].steps.find((step) => step.title === "The three-step framework in this workshop");
+        assert.equal(framework.source, "labs/04-app-modernization/README.md");
+        assert.match(framework.body, /Code preparation/);
+        assert.match(framework.body, /Enrichment/);
+        assert.match(framework.body, /Automation aids/);
+    }
+});
+
+test("existing track progress survives adding shared modernization context", async (t) => {
+    const { base } = await fixture(t);
+    const previous = structuredClone(guide);
+    for (const track of ["java", "dotnet"]) {
+        previous.tracks[track][4].steps = previous.tracks[track][4].steps.filter((step) => step.source !== previous.tracks[track][4].source);
+    }
+    const oldStore = createProgressStore(key, previous, base);
+    const step = previous.tracks.java[4].steps[0].id;
+    let state = await oldStore.update({ revision: 0, kind: "select", lab: "04", step });
+    state = await oldStore.update({ revision: state.revision, kind: "step", step, status: "done" });
+    assert.deepEqual(await createProgressStore(key, guide, base).read(), state);
 });
 
 test("fenced examples do not become headings or empty steps", () => {

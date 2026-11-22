@@ -1,5 +1,11 @@
 # Lab 03: Custom agents and skills
 
+> **Why this lab:** Agents and skills let you hand off repeatable work and give
+> each one only the tools it needs. You will use this pattern again in the
+> capstone.
+>
+> **Time:** 15 minutes.
+
 Build reusable Copilot behavior with the least privilege needed for the job.
 You will inspect repository custom agents and skills, create one bounded agent
 from a starter, invoke an existing diagnostic skill, and verify tool and path

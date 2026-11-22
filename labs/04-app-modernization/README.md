@@ -1,5 +1,12 @@
 # Lab 04: Application modernization
 
+> **Why this lab:** Learn application modernization (AppMod) by moving a legacy
+> Java or .NET app to modern frameworks and runtimes. Use Modernize CLI and the
+> Upgrade agent, review each change, and test that the app's behavior still works.
+>
+> **Time:** 20 minutes for assessment and planning, then 75 minutes after
+> lunch for the upgrade.
+
 Choose one first-class track:
 
 - [Java Asset Manager](java/) — supported on Windows, macOS, or Linux.
@@ -38,3 +45,20 @@ imported application.
 Azure deployment is optional. Each track documents a local/no-deployment
 completion path and requires exact cleanup evidence when Azure resources were
 created.
+
+## The three-step framework in this workshop
+
+Read
+[How GitHub Copilot and AI agents are saving legacy systems](https://github.blog/ai-and-ml/github-copilot/how-github-copilot-and-ai-agents-are-saving-legacy-systems/)
+for the three-step framework for AI-powered legacy modernization. The article
+uses COBOL and Semantic Kernel; this workshop applies the ideas to Java or .NET
+with the GitHub Copilot app and GitHub Agentic Workflows.
+
+| Step from the article | How you apply it here |
+| --- | --- |
+| 1. Code preparation (reverse engineering) | Inspect the selected app in Lab 01. In Lab 04, use `modernize assess` to understand its business logic, dependencies, and upgrade risks. Check the findings against the code and review them before planning changes. |
+| 2. Enrichment | Keep the approved spec from Lab 01 and the repository guidance from Lab 02 available to Copilot. Record reviewed findings so agents can use the same context. Reconcile the Modernize plan with that spec before execution. |
+| 3. Automation aids | Use the agents and skills from Lab 03 and the Upgrade agent for bounded work. Run the selected track's validation after each increment. Labs 05 and 06 add repeatable SDLC and QA workflows while deterministic CI remains the merge authority. |
+
+Keep human review at each step. Tests should check the business behavior you
+need to preserve, as well as whether the upgraded app builds.

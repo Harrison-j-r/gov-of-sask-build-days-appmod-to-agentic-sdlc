@@ -47,9 +47,14 @@ test("real browser: navigation, copies, safe source, reset, themes, narrow layou
     await page.goto(entry.url);
     await page.locator(".lab-stop").first().waitFor();
     assert.equal(await page.locator(".lab-stop").count(), 8);
+    await page.locator("#orientation summary").click();
+    assert.match(await page.locator("#orientation").textContent(), /Day 2/);
+    await page.locator(".lab-intro summary").click();
+    assert.match(await page.locator(".lab-intro").textContent(), /Why this lab/);
+    assert.match(await page.locator(".lab-intro").textContent(), /Time/);
     assert.equal(await page.locator(".step-card h3").first().textContent(), "1. Choose one application track");
     await page.keyboard.press("Tab");
-    assert.ok(await page.evaluate(() => document.activeElement.matches("a, button, select, input")));
+    assert.ok(await page.evaluate(() => document.activeElement.matches("a, button, select, input, summary")));
     await page.getByRole("button", { name: "2. Run the shared check, todo", exact: true }).click();
     await page.locator(".code-card").first().waitFor();
     const exactBlock = await page.locator(".code-card pre code").first().textContent();
@@ -87,6 +92,8 @@ test("real browser: navigation, copies, safe source, reset, themes, narrow layou
     await page.waitForFunction(() => !document.getElementById("platform").hidden);
     await page.locator("#lab-04").click();
     await page.waitForFunction(() => document.querySelector(".lab-heading h2")?.textContent === "Modernize one slice");
+    assert.equal(await page.locator(".step-card table tbody tr").count(), 3);
+    assert.match(await page.locator(".step-card table").textContent(), /Code preparation/);
     assert.match(await page.locator("#platform").textContent(), /not macOS, Linux, or WSL/);
     await page.locator("#shell").selectOption("bash");
     await page.waitForFunction(() => document.getElementById("workspace").getAttribute("aria-busy") === "false");

@@ -1,5 +1,12 @@
 # Lab 02: Copilot instructions and agent guidance
 
+> **Why this lab:** Copilot follows the guidance stored in your repository.
+> When that guidance is clear and scoped to the right files, you repeat
+> yourself less and Copilot stops applying Java rules to .NET code, or the
+> other way around.
+>
+> **Time:** 15 minutes.
+
 Customize GitHub Copilot for a monorepo without turning one technology's rules
 into another technology's mistakes. You will trace every guidance source for
 one file, improve one path-specific instruction, add one useful local pointer,

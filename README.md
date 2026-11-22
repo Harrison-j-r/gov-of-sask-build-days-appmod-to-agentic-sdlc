@@ -1,184 +1,235 @@
+![Microsoft and GitHub Build Days banner](assets/build-days-banner.png)
+
 # Government of Saskatchewan Build Day
 
-## Modern App Development with GitHub Copilot
+## Modern app development with GitHub Copilot
 
-| Event detail | Value |
-| --- | --- |
-| Date | Wednesday, November 4, 2026 |
-| Time | 10:00 AM to 3:00 PM |
-| Location | Regina; venue confirmation pending |
-| Organizer | Ve Sharma, Solution Engineer, Microsoft |
-| Coaches | Ve Sharma and Rajeev Kalamthodi |
-| Audience | Government of Saskatchewan developers and local partners |
-| Level | Beginner to intermediate, with an optional advanced capstone |
-| Capacity | Up to 40 participants |
+**Audience:** Government of Saskatchewan developers and local partners
 
-This hands-on workshop uses one repository and the GitHub Copilot app to move
-from readiness and a reviewed Plan-mode specification through application
-modernization, guarded agentic workflows, automated quality assurance, and a
-capstone. Java and .NET are equal, first-class tracks. Choose one application
-track during readiness and stay with it for the modernization work; completing
-both is not required.
+**Level:** Beginner to intermediate, with an optional advanced capstone
 
-## One repository, one flow
+```text
+      [ o.o ]
+       /|=|\
+      /_| |_\
+        / \
+     BUILD DAY
+```
 
-Clone or fork this repository once. Run commands from the repository root
-unless a lab explicitly changes the working directory. Imported applications,
-participant labs, specifications, Copilot customization, automation, capstone
-starters, and facilitator material remain together so that links and validation
-commands use one checkout.
+## 🌟Why do the Day 1 labs?
 
-Follow the labs in this order:
+These labs set you up for the rest of Build Days. By the end of Day 1 you will:
 
-1. [Readiness](labs/00-readiness/)
-2. [Plan mode and a durable specification](labs/01-spec-driven-development/)
-3. [Copilot instructions](labs/02-copilot-instructions/)
-4. [Custom agents and skills](labs/03-custom-agents-and-skills/)
-5. [Application modernization](labs/04-app-modernization/) — choose
-   [Java](labs/04-app-modernization/java/) or
-   [.NET](labs/04-app-modernization/dotnet/)
-6. [Agentic SDLC with `gh-aw`](labs/05-agentic-workflows/)
-7. [Deterministic CI and agentic QA](labs/06-automated-qa/)
-8. [Capstone](labs/07-capstone/)
+1. **Be ready for Day 2.** The Day 2 activities build on the repository,
+   tools, and habits you set up here.
+2. **Know what AI native engineering with GitHub looks like.** You plan with
+   Copilot, write a spec, and let agents do bounded work that you review.
+3. **Run work without typing every step yourself.** Instructions, agents,
+   skills, and workflows carry the work while you steer and review.
+4. **Try multi-agent orchestration in the GitHub Copilot app.** You run
+   sessions and agents side by side and decide what each one may do.
+5. **Learn application modernization (AppMod).** Use Copilot, Modernize CLI,
+   and the Upgrade agent to move a legacy Java or .NET app to modern
+   frameworks and runtimes. Understand its business logic first, then upgrade
+   in small steps and test that the behavior still works.
+6. **Automate with GitHub Agentic Workflows.** You compile and inspect
+   workflows that turn a spec into issues, issues into draft pull requests,
+   and pull requests into QA reviews.
+7. **Build in a way that works for you.** Pick Java or .NET, pick a capstone
+   pathway, and shape your instructions and agents around how your team works.
+8. **Have fun!** This is a build day. Try things, break things in your fork,
+   and ask the coaches for help.
 
-The [lab index](labs/) is the participant navigation page.
+## 🛠️ What you will do
 
-## How Copilot guidance is routed
+You work in one repository with the GitHub Copilot app. You start by checking
+your setup, write and approve a spec in Plan mode, then modernize an app,
+add guarded agentic workflows and automated QA, and finish with a capstone.
 
-Repository-wide guidance, path-specific instructions, and root or co-located
-`AGENTS.md` files are complementary sources of context. Gather the guidance
-that applies to the file being changed and stop to resolve conflicts rather
-than assuming that one source automatically overrides another. [Lab 02
-explains and verifies this instruction model](labs/02-copilot-instructions/)
-without requiring participants to memorize it during setup.
+Java and .NET are equal tracks. Pick one during readiness and stay with it for
+the modernization work. You do not need to finish both.
 
-## Choose an application track
+## 🚀 Get started
 
-| Track | Starting source | Platform requirement | Modernization target |
+1. Fork or clone this repository once.
+2. Run commands from the repository root unless a lab tells you to change
+   folders.
+3. Do [Lab 00: Readiness](labs/00-readiness/) before the event. If the
+   readiness script fails, bring the first failing check with you.
+4. Follow the labs in order:
+
+   | Lab | What you do |
+   | --- | --- |
+   | [00 Readiness](labs/00-readiness/) | Check your tools and pick a track |
+   | [01 Plan mode and a spec](labs/01-spec-driven-development/) | Write and approve one bounded spec |
+   | [02 Copilot instructions](labs/02-copilot-instructions/) | See which guidance Copilot uses and improve it |
+   | [03 Custom agents and skills](labs/03-custom-agents-and-skills/) | Build a small agent and use a skill |
+   | [04 App modernization](labs/04-app-modernization/) | Modernize [Java](labs/04-app-modernization/java/) or [.NET](labs/04-app-modernization/dotnet/) |
+   | [05 Agentic SDLC with `gh-aw`](labs/05-agentic-workflows/) | Compile and inspect guarded workflows |
+   | [06 CI and agentic QA](labs/06-automated-qa/) | Keep CI in charge and add advisory QA |
+   | [07 Capstone](labs/07-capstone/) | Build and demo a small, tested slice |
+
+The [lab index](labs/) has more detail on each lab.
+
+Everything lives in this one repository: the imported apps, labs, specs,
+Copilot customizations, automation, capstone starters, and facilitator notes.
+That keeps links and validation commands working from a single checkout.
+
+## 🤖 How Copilot picks up guidance
+
+Copilot reads several kinds of guidance in this repository: the repository-wide
+instructions, path-specific instructions, and the root and folder-level
+`AGENTS.md` files. They work together. Collect the guidance that applies to the
+file you are changing, and if two sources disagree, stop and sort it out. Do not
+assume one always wins. [Lab 02](labs/02-copilot-instructions/) walks through
+this, so you do not need to memorize it during setup.
+
+## 🧭 Choose an application track
+
+| Track | Starting source | Platform | Modernization target |
 | --- | --- | --- | --- |
 | Java Asset Manager | [`legacy-src/java-asset-manager`](legacy-src/java-asset-manager/) | Windows, macOS, or Linux; JDK 8 and JDK 21 | Java 21, Spring Boot 3, updated dependencies, containers, and an Azure-ready design |
-| .NET BookCatalog | [`legacy-src/dotnet-bookcatalog`](legacy-src/dotnet-bookcatalog/) | **Windows required** for the classic ASP.NET MVC 5 baseline, Visual Studio/MSBuild, .NET Framework 4.8, LocalDB, and .NET 10 | Modern ASP.NET Core/EF Core, containers, and an Azure-ready design |
+| .NET BookCatalog | [`legacy-src/dotnet-bookcatalog`](legacy-src/dotnet-bookcatalog/) | Windows only: the classic ASP.NET MVC 5 baseline needs Visual Studio/MSBuild, .NET Framework 4.8, LocalDB, and .NET 10 | Modern ASP.NET Core/EF Core, containers, and an Azure-ready design |
 
-The .NET application is **BookCatalog**, imported from
-`microsoft/dotnet-modernization-for-beginners`; it is not ContosoUniversity.
-The imported sources are starting states, not generated checkpoints. Preserve
-their attribution and change only the track selected by your team.
+The .NET app is BookCatalog, imported from
+`microsoft/dotnet-modernization-for-beginners`. It is not ContosoUniversity.
+Both imported apps are starting points, not generated checkpoints. Keep their
+attribution and change only the track your team picked.
 
 ### Known Java baseline defect
 
-The imported Java baseline has one known upstream test error:
-`S3FileProcessingServiceTest.downloadOriginalCopiesFileFromS3` attempts to mock
-the final AWS SDK `ResponseInputStream` class. JDK 8 packaging can succeed with
-tests skipped, while the baseline full test run reports one error. Do not call
-that error an application pass or hide it by deleting/disabling the test. Use
-the [known upstream test recovery card](facilitator/recovery/java/known-upstream-test.md);
-the modernization target is a behavior-valid test suite passing on JDK 21.
+The imported Java app has one known test error from upstream:
+`S3FileProcessingServiceTest.downloadOriginalCopiesFileFromS3` tries to mock
+the final AWS SDK `ResponseInputStream` class. On JDK 8, packaging with tests
+skipped can succeed, but a full test run reports one error. Do not call that a
+pass, and do not delete or disable the test to hide it. Use the
+[known upstream test recovery card](facilitator/recovery/java/known-upstream-test.md).
+The goal is a test suite that passes on JDK 21 and still checks real behavior.
 
-## Modernization tools in the GitHub Copilot app
+## 🔧 Application modernization (AppMod)
 
-The modernization lab uses two related tools after Lab 01 produces one
-human-approved durable specification:
+The GitHub Blog article
+[How GitHub Copilot and AI agents are saving legacy systems](https://github.blog/ai-and-ml/github-copilot/how-github-copilot-and-ai-agents-are-saving-legacy-systems/)
+describes a three-step framework for AI-powered legacy modernization:
 
-- **Modernize CLI** (`modernize`) for repository assessment and technical
-  planning. Install it before the event and verify `modernize --help`.
-- **Upgrade agent plugin** for guided implementation in the GitHub Copilot
-  app. Open **Settings > Plugins**, add the
+1. Code preparation (reverse engineering): understand the business logic and
+   dependencies in the existing app.
+2. Enrichment: give AI useful context through reviewed documentation and
+   explanations of how the code works.
+3. Automation aids: use specialized agents and workflows for repeatable work,
+   with tests and human review.
+
+The article uses COBOL examples. We apply these ideas to Java and .NET in
+[Lab 04](labs/04-app-modernization/README.md#the-three-step-framework-in-this-workshop).
+
+## 🧰 Modernization tools in the GitHub Copilot app
+
+After Lab 01 gives you one approved spec, the modernization lab uses two tools:
+
+- **Modernize CLI** (`modernize`) assesses the repository and drafts a
+  technical plan. Install it before the event and check that
+  `modernize --help` works.
+- **Upgrade agent plugin** does the guided implementation in the GitHub
+  Copilot app. Open **Settings > Plugins**, add the
   `microsoft/upgrade-agent-plugins` marketplace, approve it, and install
   `upgrade-agent`. Start a new session and use `/agent` to confirm
-  `upgrade-agent:upgrade`, or select **Upgrade** from the agent picker.
+  `upgrade-agent:upgrade` is there, or pick **Upgrade** in the agent picker.
 
-Use the generated assessment and technical plan as proposals. Reconcile them
-with the approved specification, then review scope, architecture, security,
-cost, validation, and cleanup before approving Upgrade-agent execution. Do not
-invent tool output when a tool is unavailable; record the blocker and complete
-the documented review/local-validation route instead.
+Treat the assessment and plan as proposals. Check them against your approved
+spec, then review scope, architecture, security, cost, validation, and cleanup
+before you let the Upgrade agent run. If a tool is not available, write down
+the blocker and use the documented review and local validation route. Never
+make up tool output.
 
-## Agentic workflows and deterministic CI
+## ⚙️ Agentic workflows and CI
 
-Conventional `ci-*.yml` GitHub Actions run fixed, reproducible commands and
-remain the merge authority. The Markdown `gh-aw` workflows investigate
-evidence, propose bounded changes, create advisory reviews or draft pull
-requests through safe outputs, and no-op when evidence is weak. They do not
-replace, approve, suppress, or weaken deterministic CI.
+The regular `ci-*.yml` GitHub Actions run fixed, repeatable commands. They
+decide whether a change can merge.
 
-GitHub Agentic Workflows is a **public-preview** technology. The checked-in
-workflow locks were generated with `gh aw version v0.89.21`; other releases may
-change schema, validation, or generated YAML. Use the pinned release for these
-labs, never hand-edit `.lock.yml` files, and treat a version upgrade as a
-separate reviewed maintenance change. Live write-capable runs are optional and
-restricted to a disposable workshop fork with explicit approval.
+The Markdown `gh-aw` workflows look at evidence and suggest small changes.
+They post advisory reviews or open draft pull requests through safe outputs,
+and do nothing when the evidence is weak. They never replace, approve, silence,
+or weaken CI.
 
-## Event agenda
+GitHub Agentic Workflows is in public preview. The checked-in lock files were
+generated with `gh aw version v0.89.21`, and other releases may change the
+schema or the generated YAML. Use that pinned version for the labs, never edit
+`.lock.yml` files by hand, and treat a version upgrade as its own reviewed
+change. Live runs that can write to GitHub are optional and only allowed in a
+throwaway workshop fork with explicit approval.
 
-| Time | Session | Participant checkpoint |
+## 🗓️Event agenda
+
+| Time | Session | You should have |
 | --- | --- | --- |
-| 10:00-10:10 | Welcome and safety | Success and no-production rule |
-| 10:10-10:20 | The North Star | See the one-repository, agentic SDLC flow |
-| 10:20-10:35 | Modernization | Connect outcomes to engineering evidence |
-| 10:35-10:50 | [Lab 00: readiness](labs/00-readiness/) and track selection | Fork/branch, Copilot app, selected baseline, and blockers recorded |
-| 10:50-11:10 | [Lab 01: Plan mode and durable specification](labs/01-spec-driven-development/) | One human-approved durable specification; no application edits |
-| 11:10-11:25 | [Lab 02: Copilot instructions](labs/02-copilot-instructions/) | Guidance trace plus matching and non-matching evidence |
-| 11:25-11:40 | [Lab 03: agents and skills](labs/03-custom-agents-and-skills/) | Bounded agent and reusable skill |
-| 11:40-12:00 | [Lab 04: Modernize assessment and technical plan](labs/04-app-modernization/) | Reviewed assessment and reconciled technical plan |
-| 12:00-12:30 | Lunch | No unattended deployments or workflow runs |
-| 12:30-1:45 | Lab 04: Upgrade execution | Reviewed slice passes locally |
-| 1:45-2:05 | [Lab 05: agentic SDLC](labs/05-agentic-workflows/) | Compile/inspect guarded `gh-aw` sources and locks |
-| 2:05-2:25 | [Lab 06: automated QA](labs/06-automated-qa/) | Explain deterministic CI versus agentic review/remediation |
-| 2:25-2:45 | [Lab 07: capstone](labs/07-capstone/) | Thin slice, validation evidence, and demo script |
-| 2:45-3:00 | Closeout | Evidence, limits, cleanup, and next step |
+| 10:00-10:10 | Welcome and safety | Success criteria and the no-production rule |
+| 10:10-10:20 | The North Star | A view of the one-repository agentic SDLC flow |
+| 10:20-10:35 | Modernization | Outcomes linked to engineering evidence |
+| 10:35-10:50 | [Lab 00: readiness](labs/00-readiness/) and track choice | Fork or branch, Copilot app, chosen baseline, and any blockers written down |
+| 10:50-11:10 | [Lab 01: Plan mode and spec](labs/01-spec-driven-development/) | One approved spec and no app code changes |
+| 11:10-11:25 | [Lab 02: Copilot instructions](labs/02-copilot-instructions/) | A guidance trace with matching and non-matching evidence |
+| 11:25-11:40 | [Lab 03: agents and skills](labs/03-custom-agents-and-skills/) | A bounded agent and a reusable skill |
+| 11:40-12:00 | [Lab 04: Modernize assessment and plan](labs/04-app-modernization/) | A reviewed assessment and a plan that matches your spec |
+| 12:00-12:30 | Lunch | No deployments or workflow runs left running unattended |
+| 12:30-1:45 | Lab 04: Upgrade execution | A reviewed slice that passes locally |
+| 1:45-2:05 | [Lab 05: agentic SDLC](labs/05-agentic-workflows/) | Compiled and inspected `gh-aw` sources and locks |
+| 2:05-2:25 | [Lab 06: automated QA](labs/06-automated-qa/) | You can explain CI versus agentic review and fixes |
+| 2:25-2:45 | [Lab 07: capstone](labs/07-capstone/) | A thin slice, validation evidence, and a demo script |
+| 2:45-3:00 | Closeout | Evidence, limits, cleanup, and your next step |
 
-Timeboxes are checkpoints, not permission to skip validation. If setup,
-policy, quota, or permissions block a cloud or live-workflow step, use the
-documented local/no-live-run completion path.
+The times are checkpoints. Running short on time is not a reason to skip
+validation. If setup, policy, quota, or permissions block a cloud step or a
+live workflow run, use the documented local path instead.
 
-## Capstone choices
+## 🎨 Capstone choices
 
-Teams may choose one pathway or combine a small, validated slice of several:
+Pick one pathway, or combine small, tested pieces of more than one:
 
-1. [Deepen the selected modernization](labs/07-capstone/pathways/01-modernization-deep-dive.md).
+1. [Go deeper on your modernization](labs/07-capstone/pathways/01-modernization-deep-dive.md).
 2. [Build a public-service prototype](labs/07-capstone/pathways/02-public-service-app.md)
-   from the domain-neutral React starter and either the Java or .NET API.
+   with the React starter and either the Java or .NET API.
 3. [Automate an engineering pain point](labs/07-capstone/pathways/03-agentic-workflow.md)
    with a guarded `gh-aw` workflow.
 
-Use synthetic data and avoid high-stakes eligibility, enforcement, health,
-employment, licensing, or benefits decisions. Azure deployment and live
-`gh-aw` execution are optional; a tested local slice plus a reviewed deployment
-plan or compile/audit evidence is a valid completion path.
+Use synthetic data. Stay away from high-stakes decisions such as eligibility,
+enforcement, health, employment, licensing, or benefits. Azure deployment and
+live `gh-aw` runs are optional. A tested local slice plus a reviewed deployment
+plan, or compile and audit evidence, counts as done.
 
-## Azure ownership, deployment, and cleanup
+## ☁️ Azure: ownership, deployment, and cleanup
 
-Azure is optional for workshop completion. If you deploy, you must use an
-approved **participant-owned or participant-controlled non-production
-subscription** with a known budget, quota, role, region, exact resource-group
-name, naming prefix, and safety tag. Do not use a facilitator's subscription,
-a shared production subscription, or an unowned resource group.
+You can finish the workshop without Azure. If you do deploy, use an approved
+non-production subscription that you own or control. You need to know its
+budget, quota, role, region, exact resource group name, naming prefix, and
+safety tag. Do not use a facilitator's subscription, a shared production
+subscription, or a resource group nobody owns.
 
-Run the [Azure preflight helper](scripts/azure/) before creation, review
-what-if/plan output, and keep all resources in one isolated tagged group.
-Cleanup is part of the deployment exercise even after a partial failure:
-preview the exact deletion, confirm the exact group, execute cleanup, and
-record `az group exists` returning `false`. A policy, quota, role, cost, or
-ownership blocker plus complete local evidence is a valid no-deployment result;
-weakening security or claiming an unperformed deployment is not.
+Run the [Azure preflight helper](scripts/azure/) before you create anything.
+Review the what-if or plan output, and keep everything in one tagged resource
+group. Cleanup is part of the exercise, even after a failed deployment: preview
+the deletion, confirm the group name, run the cleanup, and record that
+`az group exists` returns `false`.
 
-## Prerequisites
+If policy, quota, role, cost, or ownership stops you, that blocker plus full
+local evidence is a valid result. Weakening security or claiming a deployment
+you did not do is not.
+
+## ✅ Prerequisites
 
 Everyone needs:
 
-- a GitHub account able to fork or use an approved disposable repository;
-- GitHub Copilot Pro, Pro+, Business, or Enterprise entitlement;
-- the GitHub Copilot app, Git, and authenticated GitHub CLI;
-- Modernize CLI and the `upgrade-agent` plugin;
-- the pinned `gh-aw` extension used by this repository;
-- Docker Desktop or another compatible container runtime; and
-- Node.js and npm for the capstone starter.
+- a GitHub account that can fork this repository or use an approved
+  throwaway one
+- GitHub Copilot Pro, Pro+, Business, or Enterprise
+- the GitHub Copilot app, Git, and a signed-in GitHub CLI
+- Modernize CLI and the `upgrade-agent` plugin
+- the pinned `gh-aw` extension
+- Docker Desktop or another container runtime
+- Node.js and npm for the capstone starter
 
-Install only the Java or .NET toolchain for your selected track. Azure CLI,
-login, and a participant-controlled subscription are required only for the
-optional Azure path. Complete [Lab 00](labs/00-readiness/) before the event and
-bring the first failing check if the readiness script does not pass.
-No additional specification CLI or framework is required.
+Install only the Java or .NET toolchain for your track. You need Azure CLI, a
+signed-in Azure session, and a subscription you control only if you take the
+optional Azure path. You do not need any extra spec tool or framework.
 
 ## Repository map
 
@@ -189,6 +240,7 @@ labs/                       # Participant flow, 00 through 07
 specs/                      # Durable specification templates and examples
 scripts/                    # Readiness, validation, and Azure helpers
 facilitator/                # Runbook, recovery cards, and references
+assets/                     # Images used by the documentation
 .github/
   instructions/             # Path-scoped Copilot guidance
   agents/                   # Repository custom agents
@@ -205,20 +257,20 @@ facilitator/                # Runbook, recovery cards, and references
 - [End-to-end validation report](facilitator/guide/VALIDATION.md)
 - [Contributor and maintenance guide](CONTRIBUTING.md)
 
-The validation report records what was actually run, the known Java upstream
-defect, and checks not performed (including live Azure deployment and live
-write-capable workflows). Do not turn static review into a runtime success
-claim.
+The validation report lists what was actually run, the known Java upstream
+defect, and what was not checked, including live Azure deployment and live
+workflows that write to GitHub. A static review is not proof that something
+runs.
 
 ## License and attribution
 
-Workshop-authored material is licensed under the root [MIT License](LICENSE).
-Imported Java and .NET snapshots retain their own license files. See
+Workshop material is licensed under the root [MIT License](LICENSE). The
+imported Java and .NET snapshots keep their own license files. See
 [Third-party notices](THIRD_PARTY_NOTICES.md) for attribution and
 [`UPSTREAM_SOURCES.yml`](UPSTREAM_SOURCES.yml) for pinned source revisions,
-import paths, and the explicitly excluded unlicensed source.
+import paths, and the unlicensed source that was left out on purpose.
 
-Primary upstream references:
+Upstream references:
 
 - [Agentic Modernization Workshop](https://github.com/Azure-Samples/Agentic-Modernization-Workshop)
 - [Java migration samples](https://github.com/Azure-Samples/java-migration-copilot-samples)

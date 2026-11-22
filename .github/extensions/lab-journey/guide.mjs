@@ -17,6 +17,8 @@ const definitions = [
 ];
 
 export const sources = [
+    "README.md",
+    "labs/README.md",
     ...definitions.map(([, , , dir]) => `labs/${dir}/README.md`),
     "labs/04-app-modernization/java/README.md",
     "labs/04-app-modernization/dotnet/README.md",
@@ -82,13 +84,15 @@ function stepSections(markdown, lab) {
 
 export async function loadGuide(root) {
     const documents = Object.fromEntries(await Promise.all(sources.map(async (source) => [source, await readSource(root, source)])));
+    const orientation = sections(documents["README.md"]).find((section) => slug(section.title) === "why-do-the-day-1-labs");
+    if (!orientation) throw fail("source_changed", "The README Day 1 rationale is missing; review the workshop source.");
     const tracks = {};
     for (const track of ["java", "dotnet"]) {
         tracks[track] = definitions.map(([id, title, outcome, dir]) => {
             const source = `labs/${dir}/README.md`;
-            const inputs = id !== "04" ? [source] : track === "java"
+            const inputs = id !== "04" ? [source] : [source, ...(track === "java"
                 ? ["labs/04-app-modernization/java/README.md"]
-                : sources.filter((path) => path.startsWith("labs/04-app-modernization/dotnet/"));
+                : sources.filter((path) => path.startsWith("labs/04-app-modernization/dotnet/")))];
             const steps = inputs.flatMap((path) => stepSections(trackContent(documents[path], track), id)
                 .filter((section) => !/^(References|Current interface references|Troubleshooting|Time and prerequisites|Lab map)$/.test(section.title))
                 .map((section) => ({
@@ -102,11 +106,17 @@ export async function loadGuide(root) {
             if (!steps.length || new Set(steps.map((step) => step.id)).size !== steps.length) {
                 throw fail("source_changed", `Lab ${id}: missing or duplicate step sections; review the source.`);
             }
-            return { id, title, outcome, source, steps };
+            const sourceSections = sections(documents[source]);
+            const start = sourceSections.find((section) => section.level === 1)?.index;
+            const end = sourceSections.find((section) => section.level === 2)?.index;
+            if (start === undefined || end === undefined) throw fail("source_changed", `Lab ${id}: introductory source context is missing.`);
+            const intro = documents[source].replace(/\r\n/g, "\n").split("\n").slice(start + 1, end).join("\n").trim();
+            return { id, title, outcome, source, intro, steps };
         });
     }
     return {
         tracks, sources,
+        orientation: { title: orientation.title, body: orientation.body, source: "README.md" },
         platform: process.platform,
         safety: [
             "Checklist progress is self-reported, not a test result, human approval, or passing CI.",

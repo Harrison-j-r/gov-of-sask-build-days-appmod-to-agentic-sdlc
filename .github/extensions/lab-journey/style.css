@@ -96,6 +96,10 @@ summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
 .step-details { margin-top: 18px; }
 .list-item { padding-left: 14px; font-size: 13px; }
 .code-card { margin: 18px 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.source-table { max-width: 100%; overflow-x: auto; margin: 18px 0; }
+.source-table table { border-collapse: collapse; width: 100%; font-size: 13px; }
+.source-table th, .source-table td { border: 1px solid var(--line); padding: 10px; text-align: left; vertical-align: top; min-width: 150px; }
+#orientation { max-width: 800px; position: relative; z-index: 1; }
 .code-head { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--muted); }
 .code-head button { padding: 4px 12px; min-height: 32px; }
 .cwd { margin: 0; padding: 9px 14px 0; }

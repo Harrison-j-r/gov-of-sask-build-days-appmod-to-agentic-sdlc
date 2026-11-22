@@ -161,6 +161,35 @@ function markdown(container, body, source, directory = "Repository root unless t
             }
             card.append(pre);
             container.append(card);
+        } else if (/^\|.*\|$/.test(line.trim()) && /^\|\s*:?-/.test(lines[index + 1] ?? "")) {
+            listItem = undefined;
+            flush();
+            const wrapper = element("div", undefined, "source-table");
+            const table = element("table");
+            const header = element("tr");
+            for (const cell of line.trim().slice(1, -1).split("|")) {
+                const th = element("th");
+                th.scope = "col";
+                inline(th, cell.trim(), source);
+                header.append(th);
+            }
+            const thead = element("thead");
+            thead.append(header);
+            table.append(thead);
+            index++;
+            const tbody = element("tbody");
+            while (/^\|.*\|$/.test(lines[index + 1]?.trim() ?? "")) {
+                const row = element("tr");
+                for (const cell of lines[++index].trim().slice(1, -1).split("|")) {
+                    const td = element("td");
+                    inline(td, cell.trim(), source);
+                    row.append(td);
+                }
+                tbody.append(row);
+            }
+            table.append(tbody);
+            wrapper.append(table);
+            container.append(wrapper);
         } else if (/^#{1,6} /.test(line)) {
             listItem = undefined;
             flush();
@@ -218,6 +247,13 @@ function render() {
     const saved = state.tracks[state.track];
     const lab = labs.find((item) => item.id === saved.lab);
     const step = lab.steps.find((item) => item.id === saved.step);
+    if (!$("orientation").hasChildNodes()) {
+        const orientation = element("details", undefined, "safety");
+        orientation.append(element("summary", guide.orientation.title));
+        markdown(orientation, guide.orientation.body, guide.orientation.source);
+        orientation.append(sourceLink(guide.orientation.source, "Read the updated workshop README"));
+        $("orientation").append(orientation);
+    }
     const allSteps = labs.flatMap((item) => item.steps);
     const done = allSteps.filter((item) => saved.progress[item.id]?.status === "done").length;
     const percentage = Math.round(done / allSteps.length * 100);
@@ -244,6 +280,10 @@ function render() {
     heading.append(element("span", `Lab ${lab.id} / ${state.track === "java" ? "Java" : ".NET"}`, "eyebrow"), element("h2", lab.title), element("p", lab.outcome));
     heading.append(sourceLink(lab.id === "04" ? step.source : lab.source, "Read the canonical lab source"));
     content.append(heading);
+    const intro = element("details", undefined, "safety lab-intro");
+    intro.append(element("summary", "Why this lab · time and starting context"));
+    markdown(intro, lab.intro, lab.source);
+    content.append(intro);
     const safety = element("details", undefined, "safety");
     safety.append(element("summary", "Workshop guardrails · copy only"));
     for (const rule of guide.safety) safety.append(element("p", rule));
