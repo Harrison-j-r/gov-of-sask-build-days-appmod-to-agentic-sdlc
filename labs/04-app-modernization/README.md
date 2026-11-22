@@ -1,5 +1,12 @@
 # Lab 04: Application modernization
 
+> **Why this lab:** This is where your spec, guidance, and agents meet real
+> legacy code. Modernize CLI and the Upgrade agent do the heavy lifting while
+> you review each step.
+>
+> **Time:** 20 minutes for assessment and planning, then 75 minutes after
+> lunch for the upgrade.
+
 Choose one first-class track:
 
 - [Java Asset Manager](java/) — supported on Windows, macOS, or Linux.
