@@ -4,18 +4,19 @@
 
 ## Modern app development with GitHub Copilot
 
-| Event detail | Value |
-| --- | --- |
-| Date | Wednesday, November 4, 2026 |
-| Time | 10:00 AM to 3:00 PM |
-| Location | Regina; venue confirmation pending |
-| Organizer | Ve Sharma, Solution Engineer, Microsoft |
-| Coaches | Ve Sharma and Rajeev Kalamthodi |
-| Audience | Government of Saskatchewan developers and local partners |
-| Level | Beginner to intermediate, with an optional advanced capstone |
-| Capacity | Up to 40 participants |
+**Audience:** Government of Saskatchewan developers and local partners
 
-## Why do the Day 1 labs?
+**Level:** Beginner to intermediate, with an optional advanced capstone
+
+```text
+      [ o.o ]
+       /|=|\
+      /_| |_\
+        / \
+     BUILD DAY
+```
+
+## 🌟Why do the Day 1 labs?
 
 These labs set you up for the rest of Build Days. By the end of Day 1 you will:
 
@@ -27,9 +28,10 @@ These labs set you up for the rest of Build Days. By the end of Day 1 you will:
    skills, and workflows carry the work while you steer and review.
 4. **Try multi-agent orchestration in the GitHub Copilot app.** You run
    sessions and agents side by side and decide what each one may do.
-5. **Learn the tools that get you there.** The GitHub Copilot app, custom
-   agents and skills, Modernize CLI, the Upgrade agent, and GitHub Agentic
-   Workflows.
+5. **Learn application modernization (AppMod).** Use Copilot, Modernize CLI,
+   and the Upgrade agent to move a legacy Java or .NET app to modern
+   frameworks and runtimes. Understand its business logic first, then upgrade
+   in small steps and test that the behavior still works.
 6. **Automate with GitHub Agentic Workflows.** You compile and inspect
    workflows that turn a spec into issues, issues into draft pull requests,
    and pull requests into QA reviews.
@@ -38,7 +40,7 @@ These labs set you up for the rest of Build Days. By the end of Day 1 you will:
 8. **Have fun!** This is a build day. Try things, break things in your fork,
    and ask the coaches for help.
 
-## What you will do
+## 🛠️ What you will do
 
 You work in one repository with the GitHub Copilot app. You start by checking
 your setup, write and approve a spec in Plan mode, then modernize an app,
@@ -47,7 +49,7 @@ add guarded agentic workflows and automated QA, and finish with a capstone.
 Java and .NET are equal tracks. Pick one during readiness and stay with it for
 the modernization work. You do not need to finish both.
 
-## Get started
+## 🚀 Get started
 
 1. Fork or clone this repository once.
 2. Run commands from the repository root unless a lab tells you to change
@@ -73,7 +75,7 @@ Everything lives in this one repository: the imported apps, labs, specs,
 Copilot customizations, automation, capstone starters, and facilitator notes.
 That keeps links and validation commands working from a single checkout.
 
-## How Copilot picks up guidance
+## 🤖 How Copilot picks up guidance
 
 Copilot reads several kinds of guidance in this repository: the repository-wide
 instructions, path-specific instructions, and the root and folder-level
@@ -82,7 +84,7 @@ file you are changing, and if two sources disagree, stop and sort it out. Do not
 assume one always wins. [Lab 02](labs/02-copilot-instructions/) walks through
 this, so you do not need to memorize it during setup.
 
-## Choose an application track
+## 🧭 Choose an application track
 
 | Track | Starting source | Platform | Modernization target |
 | --- | --- | --- | --- |
@@ -104,7 +106,23 @@ pass, and do not delete or disable the test to hide it. Use the
 [known upstream test recovery card](facilitator/recovery/java/known-upstream-test.md).
 The goal is a test suite that passes on JDK 21 and still checks real behavior.
 
-## Modernization tools in the GitHub Copilot app
+## 🔧 Application modernization (AppMod)
+
+The GitHub Blog article
+[How GitHub Copilot and AI agents are saving legacy systems](https://github.blog/ai-and-ml/github-copilot/how-github-copilot-and-ai-agents-are-saving-legacy-systems/)
+describes a three-step framework for AI-powered legacy modernization:
+
+1. Code preparation (reverse engineering): understand the business logic and
+   dependencies in the existing app.
+2. Enrichment: give AI useful context through reviewed documentation and
+   explanations of how the code works.
+3. Automation aids: use specialized agents and workflows for repeatable work,
+   with tests and human review.
+
+The article uses COBOL examples. We apply these ideas to Java and .NET in
+[Lab 04](labs/04-app-modernization/README.md#the-three-step-framework-in-this-workshop).
+
+## 🧰 Modernization tools in the GitHub Copilot app
 
 After Lab 01 gives you one approved spec, the modernization lab uses two tools:
 
@@ -123,7 +141,7 @@ before you let the Upgrade agent run. If a tool is not available, write down
 the blocker and use the documented review and local validation route. Never
 make up tool output.
 
-## Agentic workflows and CI
+## ⚙️ Agentic workflows and CI
 
 The regular `ci-*.yml` GitHub Actions run fixed, repeatable commands. They
 decide whether a change can merge.
@@ -140,7 +158,7 @@ schema or the generated YAML. Use that pinned version for the labs, never edit
 change. Live runs that can write to GitHub are optional and only allowed in a
 throwaway workshop fork with explicit approval.
 
-## Event agenda
+## 🗓️Event agenda
 
 | Time | Session | You should have |
 | --- | --- | --- |
@@ -163,7 +181,7 @@ The times are checkpoints. Running short on time is not a reason to skip
 validation. If setup, policy, quota, or permissions block a cloud step or a
 live workflow run, use the documented local path instead.
 
-## Capstone choices
+## 🎨 Capstone choices
 
 Pick one pathway, or combine small, tested pieces of more than one:
 
@@ -178,7 +196,7 @@ enforcement, health, employment, licensing, or benefits. Azure deployment and
 live `gh-aw` runs are optional. A tested local slice plus a reviewed deployment
 plan, or compile and audit evidence, counts as done.
 
-## Azure: ownership, deployment, and cleanup
+## ☁️ Azure: ownership, deployment, and cleanup
 
 You can finish the workshop without Azure. If you do deploy, use an approved
 non-production subscription that you own or control. You need to know its
@@ -196,7 +214,7 @@ If policy, quota, role, cost, or ownership stops you, that blocker plus full
 local evidence is a valid result. Weakening security or claiming a deployment
 you did not do is not.
 
-## Prerequisites
+## ✅ Prerequisites
 
 Everyone needs:
 
