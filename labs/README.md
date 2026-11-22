@@ -6,6 +6,12 @@ one human-approved durable specification. In Lab 04, choose either the Java
 Asset Manager or .NET BookCatalog track and remain on that track; completing
 both is not required. Labs 05-07 then use the same repository and evidence.
 
+Prefer a guided view? In a canvas-capable GitHub Copilot app, ask **Open the
+Build Day lab guide canvas**. The optional
+[lab-guide extension](../.github/extensions/lab-journey/README.md) adds
+interactive steps, copy buttons, and private progress. It never executes
+exercises; the documents below remain authoritative.
+
 | Order | Lab | Outcome |
 | --- | --- | --- |
 | 1 | [00 — Readiness](00-readiness/) | Verify the Copilot app, shared tools, selected toolchain, and imported baseline. |
