@@ -4,6 +4,12 @@ Start with [why these labs matter](../README.md#why-do-the-day-1-labs) if you
 have not read it yet. In short, Day 1 gets you ready for Day 2 and shows you
 how to plan, delegate, and automate work with GitHub Copilot.
 
+Prefer a guided view? In a canvas-capable GitHub Copilot app, ask **Open the
+Build Day lab guide canvas**. The optional
+[lab-guide extension](../.github/extensions/lab-journey/README.md) adds
+interactive steps, copy buttons, and private progress. It never executes
+exercises; the documents below remain authoritative.
+
 ## Lab order
 
 | Order | Lab | Time | You finish with |

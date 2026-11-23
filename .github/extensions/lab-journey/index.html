@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="canvas-token" content="__CANVAS_TOKEN__">
+  <title>Build Day lab guide</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" type="module"></script>
+</head>
+<body>
+  <header class="masthead">
+    <a class="brand-link" href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub integration <span aria-hidden="true">&#8599;</span></a>
+    <span class="eyebrow">Build Day / Your learning journey</span>
+    <h1>Small steps.<br><span class="accent">Real engineering.</span></h1>
+    <p class="intro">From a reviewed plan to a working slice. Choose your track, follow the labs, and bring the evidence.</p>
+    <div id="orientation"></div>
+    <div class="toolbar">
+      <label>Application track<select id="track"><option value="java">Java Asset Manager</option><option value="dotnet">.NET BookCatalog</option></select></label>
+      <label>Command shell<select id="shell"><option value="powershell">Windows PowerShell</option><option value="bash">Bash</option></select></label>
+      <label class="motion"><input type="checkbox" id="motion"> Animations</label>
+    </div>
+    <p id="platform" class="notice" hidden></p>
+    <noscript>This canvas needs JavaScript. Follow the Markdown lab index in your checkout instead.</noscript>
+  </header>
+  <main id="workspace" aria-busy="true">
+    <div class="loading">Loading your local lab guide...</div>
+  </main>
+  <div id="status" role="status" aria-live="polite"></div>
+  <div id="error" role="alert" hidden><span id="error-text"></span><button id="refresh">Refresh saved progress</button></div>
+  <footer>Private on this machine. Self-reported progress, not validation. No commands run here.
+    <a href="https://brand.github.com/" target="_blank" rel="noopener noreferrer">Brand reference</a>
+    <button id="reset">Reset this track</button>
+  </footer>
+  <dialog id="source-dialog" aria-labelledby="source-title">
+    <div class="dialog-head"><h2 id="source-title">Source document</h2><button id="close-source" aria-label="Close source document">Close</button></div>
+    <p id="source-path" class="file-path"></p><div id="source-body"></div>
+  </dialog>
+  <dialog id="reset-dialog" aria-labelledby="reset-title">
+    <h2 id="reset-title">Reset this track?</h2>
+    <p>Clear this repository's checklist and return to Lab 00 for the selected track. The other track is untouched.</p>
+    <div class="dialog-actions"><button id="cancel-reset">Keep progress</button><button id="confirm-reset" class="primary">Reset progress</button></div>
+  </dialog>
+</body>
+</html>
