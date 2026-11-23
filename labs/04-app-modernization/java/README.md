@@ -29,6 +29,12 @@ runtime/framework execution after that proposal is reconciled with the
 specification. Work incrementally; do not ask an agent to rewrite the
 application in one pass.
 
+For an optional CI executor of the reviewed Java 21/Spring Boot 3 slice, follow
+the [Modernize CI/CD guide](../../../scripts/modernization/README.md).
+Use either that executor or the Upgrade agent for a plan, not both. A runtime
+upgrade draft PR is not completion of the managed-service or deployment
+outcomes below.
+
 ## Outcomes
 
 You will:

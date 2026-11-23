@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "modernizeVersion": "1.0.95",
+  "model": "claude-sonnet-5",
+  "maxReportBytes": 1048576,
+  "maxPatchBytes": 2097152,
+  "maxChangedFiles": 100,
+  "tracks": {
+    "java": {
+      "source": "legacy-src/java-asset-manager",
+      "bundleRoot": "specs/work/java-modernization/ci-plans",
+      "target": "java21-springboot3",
+      "assessmentWorkflow": ".github/workflows/modernize-assess-java.yml",
+      "upgradeWorkflow": ".github/workflows/modernize-upgrade-java.yml",
+      "validationWorkflow": ".github/workflows/ci-legacy-java.yml"
+    },
+    "dotnet": {
+      "source": "legacy-src/dotnet-bookcatalog/shared-legacy-app",
+      "bundleRoot": "specs/work/dotnet-modernization/ci-plans",
+      "target": "net10-aspnetcore-efcore",
+      "assessmentWorkflow": ".github/workflows/modernize-assess-dotnet.yml",
+      "upgradeWorkflow": ".github/workflows/modernize-upgrade-dotnet.yml",
+      "validationWorkflow": ".github/workflows/ci-legacy-dotnet.yml"
+    }
+  }
+}

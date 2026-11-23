@@ -123,6 +123,11 @@ reviewed runtime/framework execution so the participant can review and steer
 each increment in the app. Neither executor may redefine the approved
 specification.
 
+For separately authorized automation of this execution path, use the
+[reviewed-plan CI workflow](../../../scripts/modernization/README.md).
+It does not remove the specification, technical-plan, or behavior-verification
+gates, and must not race an active Upgrade-agent session.
+
 ## 2. Build and inspect
 
 Run from the monorepo root:

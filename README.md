@@ -183,6 +183,12 @@ schema or the generated YAML. Use that pinned version for the labs, never edit
 change. Live runs that can write to GitHub are optional and only allowed in a
 throwaway workshop fork with explicit approval.
 
+For the optional [Modernize CI/CD route](scripts/modernization/README.md),
+separate Java and .NET workflows produce weekly assessment reports after
+setup. GH-AW proposes advisory work, and a maintainer can execute an exact
+reviewed upgrade plan to produce a draft PR. Credentials and live runs require
+separate setup; deterministic baseline/target CI still decides what can merge.
+
 ## 🗓️Event agenda
 
 | Time | Session | You should have |

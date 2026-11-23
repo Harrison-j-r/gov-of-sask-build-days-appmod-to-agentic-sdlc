@@ -18,6 +18,11 @@ the specialized technical sequence. The Upgrade agent executes only after that
 proposal has been reconciled with the approved specification and reviewed by a
 human.
 
+The optional [Modernize CI/CD route](../../../scripts/modernization/README.md)
+can execute a reviewed .NET 10 runtime/framework plan on a Windows runner.
+Do not run it alongside the Upgrade agent for the same work item. It requires
+real local behavior evidence and does not perform Azure deployment.
+
 ## Outcomes
 
 By the end of the lab, you will have:

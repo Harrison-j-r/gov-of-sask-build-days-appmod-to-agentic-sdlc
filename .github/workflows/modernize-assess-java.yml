@@ -1,0 +1,55 @@
+name: Modernize assessment - Java
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: modernize-assess-java
+  cancel-in-progress: false
+
+env:
+  MODERNIZE_ENABLED: ${{ vars.MODERNIZE_ENABLED }}
+
+jobs:
+  assess:
+    if: vars.MODERNIZE_ENABLED == 'true' || (vars.MODERNIZE_ENABLED == 'pilot' && github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Install the explicitly pinned Modernize distribution
+        shell: pwsh
+        env:
+          RELEASE_URL: ${{ vars.MODERNIZE_LINUX_URL }}
+          RELEASE_SHA256: ${{ vars.MODERNIZE_LINUX_SHA256 }}
+        run: |
+          .\scripts\modernization\Install-Modernize.ps1 `
+            -Url $env:RELEASE_URL -Sha256 $env:RELEASE_SHA256 `
+            -Destination (Join-Path $env:RUNNER_TEMP 'modernize-cli')
+      - name: Assess Java without changing source
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.MODERNIZE_COPILOT_TOKEN }}
+        run: |
+          .\scripts\modernization\Invoke-Modernization.ps1 -Mode Assess -Track java `
+            -CandidateRoot (Join-Path $env:RUNNER_TEMP 'assessment-source') `
+            -OutputDirectory (Join-Path $env:RUNNER_TEMP 'assessment')
+      - name: Upload only curated assessment evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: assessment-java-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/assessment/evidence/
+          if-no-files-found: error
+          retention-days: 14

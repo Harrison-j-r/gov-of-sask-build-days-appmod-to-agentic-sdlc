@@ -5,12 +5,16 @@ on:
     paths:
       - "legacy-src/java-asset-manager/**"
       - "scripts/validation/validate-java.*"
+      - "scripts/validation/validate-java-target.ps1"
+      - "scripts/modernization/**"
       - ".github/workflows/ci-legacy-java.yml"
   push:
     branches: [main]
     paths:
       - "legacy-src/java-asset-manager/**"
       - "scripts/validation/validate-java.*"
+      - "scripts/validation/validate-java-target.ps1"
+      - "scripts/modernization/**"
       - ".github/workflows/ci-legacy-java.yml"
   workflow_dispatch:
 
@@ -22,8 +26,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  profile:
+    runs-on: ubuntu-latest
+    outputs:
+      profile: ${{ steps.profile.outputs.profile }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Select the supported project profile
+        id: profile
+        shell: pwsh
+        run: .\scripts\modernization\Get-ValidationProfile.ps1 -Track java
+
   build:
     name: Build imported baseline (JDK 8)
+    needs: profile
+    if: needs.profile.outputs.profile == 'baseline'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -43,7 +62,8 @@ jobs:
 
   characterize-known-test-defect:
     name: Characterize known upstream Mockito defect
-    needs: build
+    needs: [profile, build]
+    if: needs.profile.outputs.profile == 'baseline'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -74,3 +94,49 @@ jobs:
           grep -F "Cannot mock/spy class software.amazon.awssdk.core.ResponseInputStream" legacy-java-test.log
           grep -F "Tests run: 4, Failures: 0, Errors: 1, Skipped: 0" legacy-java-test.log
           echo "::notice::The imported baseline still exhibits only the explicitly characterized Mockito final-class defect."
+
+  target:
+    name: Verify Java 21 and Spring Boot 3
+    needs: profile
+    if: needs.profile.outputs.profile == 'target'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Run the target gate without the baseline exception
+        shell: pwsh
+        run: |
+          .\scripts\validation\validate-java-target.ps1 `
+            -EvidenceDirectory (Join-Path $env:RUNNER_TEMP 'java-validation')
+
+  result:
+    name: Legacy Java validation
+    if: always()
+    needs: [profile, build, characterize-known-test-defect, target]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require the selected profile's real checks
+        shell: pwsh
+        env:
+          PROFILE: ${{ needs.profile.outputs.profile }}
+          PROFILE_RESULT: ${{ needs.profile.result }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          CHARACTERIZATION_RESULT: ${{ needs.characterize-known-test-defect.result }}
+          TARGET_RESULT: ${{ needs.target.result }}
+        run: |
+          if ($env:PROFILE_RESULT -ne 'success') { throw 'Java profile selection failed.' }
+          if ($env:PROFILE -eq 'baseline') {
+            if ($env:BUILD_RESULT -ne 'success' -or $env:CHARACTERIZATION_RESULT -ne 'success' -or $env:TARGET_RESULT -ne 'skipped') {
+              throw 'Java baseline evidence is incomplete or failed.'
+            }
+          } elseif ($env:PROFILE -eq 'target') {
+            if ($env:TARGET_RESULT -ne 'success' -or $env:BUILD_RESULT -ne 'skipped' -or $env:CHARACTERIZATION_RESULT -ne 'skipped') {
+              throw 'Java target evidence is incomplete or failed.'
+            }
+          } else { throw 'Unsupported Java profile.' }

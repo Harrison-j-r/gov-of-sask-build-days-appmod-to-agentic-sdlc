@@ -1,0 +1,170 @@
+name: Modernize approved upgrade - .NET
+
+on:
+  workflow_dispatch:
+    inputs:
+      plan_bundle:
+        description: "Reviewed specs/work/dotnet-modernization/ci-plans/<plan-name> directory"
+        required: true
+        type: string
+      approval_pr:
+        description: "Merged PR containing human approval of this exact specification and plan"
+        required: true
+        type: number
+
+permissions:
+  contents: read
+  pull-requests: read
+  actions: read
+
+concurrency:
+  group: modernize-upgrade-dotnet
+  cancel-in-progress: false
+
+env:
+  MODERNIZE_ENABLED: ${{ vars.MODERNIZE_ENABLED }}
+
+jobs:
+  prepare:
+    if: vars.MODERNIZE_ENABLED == 'true' || vars.MODERNIZE_ENABLED == 'pilot'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      proceed: ${{ steps.plan.outputs.proceed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify reviewed plan and current source
+        id: plan
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PLAN_BUNDLE: ${{ inputs.plan_bundle }}
+          APPROVAL_PR: ${{ inputs.approval_pr }}
+        run: |
+          .\scripts\modernization\Invoke-Modernization.ps1 -Mode Prepare -Track dotnet `
+            -Bundle $env:PLAN_BUNDLE -ApprovalPr $env:APPROVAL_PR `
+            -OutputDirectory (Join-Path $env:RUNNER_TEMP 'request')
+      - if: steps.plan.outputs.proceed == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: dotnet-request-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/request/request.json
+          if-no-files-found: error
+          retention-days: 7
+  execute:
+    needs: prepare
+    if: needs.prepare.outputs.proceed == 'true'
+    runs-on: windows-2022
+    timeout-minutes: 90
+    outputs:
+      changed: ${{ steps.execute.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: microsoft/setup-msbuild@v2
+        with:
+          vs-version: "[17.0,18.0)"
+          msbuild-architecture: x64
+      - uses: NuGet/setup-nuget@v2
+        with:
+          nuget-version: "6.14.0"
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dotnet-request-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/input/
+      - name: Install verified Modernize
+        shell: pwsh
+        env:
+          RELEASE_URL: ${{ vars.MODERNIZE_WINDOWS_URL }}
+          RELEASE_SHA256: ${{ vars.MODERNIZE_WINDOWS_SHA256 }}
+        run: |
+          .\scripts\modernization\Install-Modernize.ps1 -Url $env:RELEASE_URL `
+            -Sha256 $env:RELEASE_SHA256 -Destination (Join-Path $env:RUNNER_TEMP 'modernize-cli')
+      - name: Execute only the approved plan
+        id: execute
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.MODERNIZE_COPILOT_TOKEN }}
+        run: |
+          .\scripts\modernization\Invoke-Modernization.ps1 -Mode Execute -Track dotnet `
+            -InputDirectory (Join-Path $env:RUNNER_TEMP 'input') `
+            -CandidateRoot (Join-Path $env:RUNNER_TEMP 'candidate') `
+            -OutputDirectory (Join-Path $env:RUNNER_TEMP 'candidate-output')
+      - if: steps.execute.outputs.changed == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: dotnet-candidate-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/candidate-output/candidate.json
+            ${{ runner.temp }}/candidate-output/candidate.patch
+          if-no-files-found: error
+          retention-days: 7
+  validate:
+    needs: execute
+    if: needs.execute.outputs.changed == 'true'
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dotnet-request-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/input/
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dotnet-candidate-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/input/candidate/
+      - name: Validate exact candidate without model or publication credentials
+        shell: pwsh
+        run: |
+          .\scripts\modernization\Invoke-Modernization.ps1 -Mode Validate -Track dotnet `
+            -InputDirectory (Join-Path $env:RUNNER_TEMP 'input') `
+            -CandidateRoot (Join-Path $env:RUNNER_TEMP 'candidate') `
+            -OutputDirectory (Join-Path $env:RUNNER_TEMP 'validation-output')
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: dotnet-validated-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/validation-output/validated/
+          if-no-files-found: error
+          retention-days: 7
+  publish:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dotnet-request-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/input/
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dotnet-validated-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/input/validated/
+      - name: Publish a draft PR without executing candidate code
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MODERNIZE_PUBLISH_TOKEN: ${{ secrets.MODERNIZE_PUBLISH_TOKEN }}
+        run: |
+          .\scripts\modernization\Invoke-Modernization.ps1 -Mode Publish -Track dotnet `
+            -InputDirectory (Join-Path $env:RUNNER_TEMP 'input') `
+            -CandidateRoot (Join-Path $env:RUNNER_TEMP 'candidate') `
+            -OutputDirectory (Join-Path $env:RUNNER_TEMP 'publication')

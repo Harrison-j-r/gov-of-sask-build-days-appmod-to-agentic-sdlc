@@ -16,6 +16,11 @@ Workflows (`gh-aw`).
 > fork or disposable repository. Do not apply `agent-ready` until a human has
 > reviewed the issue boundary. This lab does not require a live write run.
 
+An optional [Modernize report-triage workflow](../../scripts/modernization/README.md)
+shows another use of GH-AW: turn a verified assessment into one advisory issue
+without activating implementation. Its assessment and approved-plan execution
+jobs remain conventional Actions, with separate credentials and gates.
+
 ## Learning objectives
 
 By the end of the lab, you can:
