@@ -220,6 +220,6 @@ Stop and request human guidance if:
       criteria, validation command, exclusions, risks, and stop conditions.
 - **Reviewer:** @Harrison-j-r
 - **Approval date:** 2026-11-23
-- **Approved specification commit:** Pending; record the approval commit SHA in a follow-up metadata commit.
+- **Approved specification commit:** `e8f9cb9`
 
 This approval authorizes issue preparation, not implementation.
