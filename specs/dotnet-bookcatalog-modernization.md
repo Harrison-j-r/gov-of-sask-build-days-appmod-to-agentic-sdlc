@@ -275,8 +275,13 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
   After stopping and relaunching IIS Express against the same source, `/Books`
   and `/Books/Edit/4` returned HTTP 200 and the edit page still showed 2009.
   The edited year therefore persisted through an IIS Express restart.
-- **Validation:** The participant confirms missing-field and out-of-range-year
-  validation cases were not tested. Do not infer passing results.
+- **Routes:** After restart, both `/` and `/Books` returned HTTP 200 and
+  displayed the catalog.
+- **Validation:** Synthetic HTTP POSTs to `Books/Create`, using the rendered
+  antiforgery token, omitted Title, omitted Author, and submitted years 1799
+  and 2101. Each returned HTTP 200 with field-validation feedback, and none of
+  the unique synthetic markers appeared in the catalog afterward. These
+  checks did not cover overlength values or tokenless requests.
 - **Modernize assessment:** Not run. No CLI assessment findings are claimed.
 - **User decisions:** Remove the User-Agent diagnostic; add an unchecked-by-
   default `Include inactive books` checkbox so users can reveal and manage
@@ -286,9 +291,6 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
 
 ### Unresolved questions
 
-- Before specification approval, test whether invalid-input validation
-  rejects missing title/author and out-of-range years. Those cases have not
-  been tested.
 - Azure subscription, region, budget, and role details are intentionally
   undecided. They are required only before a separately approved deployment.
 - The Modernize assessment has not been run. If it later provides evidence
@@ -296,8 +298,8 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
   boundaries, revise and reapprove this specification before technical
   planning or implementation.
 
-This draft is not ready for approval while the validation outcome remains
-unrecorded or any assessment evidence would change its contract.
+If later assessment evidence would change this contract, revise and reapprove
+the specification before technical planning or implementation.
 
 ### Boundary and validation review
 
@@ -315,7 +317,9 @@ unrecorded or any assessment evidence would change its contract.
 - [x] Participant-reported list and CRUD observations are recorded; the
       available screenshot was not added to the repository.
 - [x] Restart persistence was verified for the edit to book ID 4.
-- [ ] Legacy validation outcomes are recorded.
+- [x] Legacy missing-field and out-of-range-year validation checks are
+      recorded; overlength and tokenless cases were not part of this baseline
+      probe.
 - [ ] Human review and approval are pending.
 
 ### Stop conditions
