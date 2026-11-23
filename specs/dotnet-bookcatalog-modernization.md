@@ -269,9 +269,14 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
   again. The participant also reports that another created book displayed row
   number 7. The source view uses an incrementing row counter, so this is a
   display position rather than the database ID. A screenshot is available to
-  the participant but was not added to the repository. Individual outcomes
-  for invalid-input validation and persistence after restart were not stated;
-  do not infer passing results.
+  the participant but was not added to the repository.
+- **Restart persistence:** The first displayed book is database ID 4. Before
+  restart, its edit page returned HTTP 200 and showed Published Year 2009.
+  After stopping and relaunching IIS Express against the same source, `/Books`
+  and `/Books/Edit/4` returned HTTP 200 and the edit page still showed 2009.
+  The edited year therefore persisted through an IIS Express restart.
+- **Validation:** The participant confirms missing-field and out-of-range-year
+  validation cases were not tested. Do not infer passing results.
 - **Modernize assessment:** Not run. No CLI assessment findings are claimed.
 - **User decisions:** Remove the User-Agent diagnostic; add an unchecked-by-
   default `Include inactive books` checkbox so users can reveal and manage
@@ -281,10 +286,9 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
 
 ### Unresolved questions
 
-- Before specification approval, record whether invalid-input validation
-  rejected missing title/author and out-of-range years, and whether the edited
-  value persisted after an application restart. The participant's reported
-  completion alone does not establish these individual outcomes.
+- Before specification approval, test whether invalid-input validation
+  rejects missing title/author and out-of-range years. Those cases have not
+  been tested.
 - Azure subscription, region, budget, and role details are intentionally
   undecided. They are required only before a separately approved deployment.
 - The Modernize assessment has not been run. If it later provides evidence
@@ -292,9 +296,8 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
   boundaries, revise and reapprove this specification before technical
   planning or implementation.
 
-This draft is not ready for approval while the validation and restart-persistence
-outcomes remain unrecorded or any assessment evidence would change its
-contract.
+This draft is not ready for approval while the validation outcome remains
+unrecorded or any assessment evidence would change its contract.
 
 ### Boundary and validation review
 
@@ -311,7 +314,8 @@ contract.
       hosting, secrets, and unapproved deployment.
 - [x] Participant-reported list and CRUD observations are recorded; the
       available screenshot was not added to the repository.
-- [ ] Legacy validation and restart-persistence outcomes are recorded.
+- [x] Restart persistence was verified for the edit to book ID 4.
+- [ ] Legacy validation outcomes are recorded.
 - [ ] Human review and approval are pending.
 
 ### Stop conditions
