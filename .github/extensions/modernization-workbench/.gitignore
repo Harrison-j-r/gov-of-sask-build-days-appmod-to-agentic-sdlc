@@ -1,0 +1,9 @@
+/artifacts/
+/node_modules/
+/public/
+/.cache/
+/coverage/
+/playwright-report/
+/test-results/
+/*.log
+/*.tgz

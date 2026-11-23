@@ -166,6 +166,32 @@ before you let the Upgrade agent run. If a tool is not available, write down
 the blocker and use the documented review and local validation route. Never
 make up tool output.
 
+### Open the modernization workbench
+
+The [Modernization workbench canvas](.github/extensions/modernization-workbench/README.md)
+adds guided app selection, evidence-linked findings, coverage gaps, contextual
+chat, and review decisions. It is a Windows-first preview: Java report review
+is supported; .NET candidate discovery is available, while .NET assessment
+and native technical planning remain gated.
+
+From the repository root:
+
+```powershell
+npm --prefix .github\extensions\modernization-workbench ci
+npm --prefix .github\extensions\modernization-workbench run build
+```
+
+Then start a new Copilot session or reload extensions and ask:
+
+```text
+Open this repository's Modernization workbench canvas using
+extensionId project:modernization-workbench. Do not run an assessment.
+```
+
+See the [setup and limitations](.github/extensions/modernization-workbench/README.md#install-and-open)
+before running it. Opening the canvas does not assess or modify an application.
+Saved assessments and decisions stay in private user storage, not this repository.
+
 ## ⚙️ Agentic workflows and CI
 
 The regular `ci-*.yml` GitHub Actions run fixed, repeatable commands. They
