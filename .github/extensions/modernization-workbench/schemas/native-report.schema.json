@@ -1,0 +1,63 @@
+{
+  "type": "object",
+  "required": ["version", "producer", "metadata", "projects", "rules"],
+  "properties": {
+    "version": { "const": "1.0.0" },
+    "producer": { "enum": ["Java AppCAT CLI", "GitHub Copilot Modernization CLI"] },
+    "metadata": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "type": "string" },
+        "mode": { "type": ["string", "null"] },
+        "domains": { "type": "array", "items": { "type": "string" } },
+        "repos": { "type": "array", "maxItems": 1 }
+      }
+    },
+    "projects": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["path", "properties", "incidents"],
+        "properties": {
+          "path": { "type": "string" },
+          "properties": {
+            "type": "object",
+            "properties": {
+              "appName": { "type": ["string", "null"] },
+              "languages": { "type": ["array", "null"], "items": { "type": "string" } }
+            }
+          },
+          "incidents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["ruleId"],
+              "properties": {
+                "ruleId": { "type": "string" },
+                "incidentId": { "type": "string" },
+                "location": { "type": "string" },
+                "line": { "type": "integer" },
+                "targets": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["title", "description"],
+        "properties": {
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "severity": { "type": "string" },
+          "labels": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}
