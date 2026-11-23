@@ -3,7 +3,7 @@
 ## Metadata
 
 - **Owner:** Unknown; not provided.
-- **Status:** Draft
+- **Status:** Approved
 - **Source root:** `legacy-src/dotnet-bookcatalog/shared-legacy-app`
 - **Related issue:** Not created.
 
@@ -43,8 +43,8 @@ Evidence:
 
 The affected users are people using the sample catalog who confirm deletion
 from a stale page or repeat a delete request. No separate API consumer or
-authentication requirement was identified; external-consumer compatibility
-remains unknown.
+authentication requirement was identified. The user explicitly accepted the
+302-to-404 change and excluded external callers from this scope.
 
 ### Desired outcomes
 
@@ -82,7 +82,7 @@ remains unknown.
   - `legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/Controllers/BooksController.cs`
 - **Requested specification artifact:** `specs/InvalidDeleteReponse.md`. This is the only documentation artifact requested here and is not an application implementation path.
 - **Primary validation command:** `msbuild BookCatalog.sln -restore -p:Configuration=Release`, run from `legacy-src\dotnet-bookcatalog\shared-legacy-app` with Visual Studio MSBuild and web application targets available.
-- **Compatibility:** Preserve successful-delete behavior. The missing-ID POST response intentionally changes from redirect to 404. Whether any external consumer depends on the old redirect is unknown and must be checked before approval if external consumers are in scope.
+- **Compatibility:** Preserve successful-delete behavior. The missing-ID POST response intentionally changes from redirect to 404. External callers are out of scope by user decision; if they are later brought into scope, stop for a separate compatibility review.
 - **Dependencies:** Keep the existing classic ASP.NET MVC 5, .NET Framework 4.8, and EF6 dependencies; add no packages or test project.
 - **Data and security:** Use only the disposable sample LocalDB database for manual checks. Preserve the antiforgery token requirement; do not add credentials, production data, or authentication/authorization changes.
 
@@ -104,7 +104,7 @@ remains unknown.
 | Boundary | GET or POST uses an ID for which no book exists. | Return 404. |
 | Boundary | A delete is repeated after the first request removed the record. | The repeated request returns 404. |
 | Compatibility | Existing-record POST deletion. | Continue removing the record and redirecting to the catalog. The observed smoke check followed the redirect to `/`, which maps to Books/Index. |
-| Compatibility | A caller relies on redirect behavior for a missing POST ID. | The response intentionally changes to 404; external callers are unknown. Pause for a maintainer decision if any such caller is in scope. |
+| Compatibility | An external caller is proposed for inclusion. | External callers are out of scope by user decision. Pause for a maintainer decision before expanding this contract to include them. |
 
 ## Acceptance criteria
 
@@ -161,7 +161,7 @@ remains unknown.
 | Repeated POST after a successful delete is a missing-record case and returns 404. | Decision | Recorded from the user's request for consistent 404 behavior; verify with AC-4. |
 | No automated test project exists under the selected .NET source root. | Dependency/evidence | `legacy-src/dotnet-bookcatalog/AGENTS.md` states there is no automated test project or standalone lint target; use the documented build and manual smoke check. |
 | The classic project requires Visual Studio MSBuild/web targets, IIS Express, and LocalDB. | Dependency | The local guide lists these prerequisites; stop and report if any are unavailable. |
-| External consumers of the old missing-POST redirect have not been identified. | Risk / unknown | Confirm with the maintainer before approval if compatibility with external callers is relevant. |
+| External callers could be raised as a future compatibility requirement. | Risk | They are out of scope for this change by user decision; stop and review the contract before including them. |
 | Exact HTTP status for invalid antiforgery tokens and database exceptions is not recorded. | Unknown | Preserve existing framework behavior; do not specify a new status or catch-and-map behavior without evidence and approval. |
 
 ## Plan-mode review checkpoint
@@ -177,13 +177,12 @@ remains unknown.
 
 ### Unresolved questions
 
-- [ ] **Maintainer:** Are any external callers or integrations relying on the old redirect for a missing POST ID? This is unknown; if any are in scope, resolve the compatibility impact before approval.
-- [ ] **Owner/reviewer:** Unknown; not provided.
-- [ ] **Related issue:** None created.
+- None affecting the approved scope. Exact HTTP statuses for invalid
+  antiforgery tokens and database exceptions remain unknown and are not changed
+  by this specification.
 
-The specification remains `Draft`. Do not mark it approved until questions that
-could change compatibility or scope are resolved and a human reviewer, date,
-and commit are recorded.
+The specification is approved for the BookCatalog MVC delete-flow scope below.
+Do not expand it to external callers without a new compatibility review.
 
 ### Boundary and validation review
 
@@ -217,12 +216,10 @@ Stop and request human guidance if:
 
 ### Human approval
 
-- [ ] I reviewed the evidence, unresolved questions, allowed paths, acceptance
+- [x] I reviewed the evidence, unresolved questions, allowed paths, acceptance
       criteria, validation command, exclusions, risks, and stop conditions.
-- **Reviewer:** Unknown; not provided.
-- **Approval date:** Unknown; not approved.
-- **Approved specification commit:** Unknown; not committed.
+- **Reviewer:** @Harrison-j-r
+- **Approval date:** 2026-11-23
+- **Approved specification commit:** Pending; record the approval commit SHA in a follow-up metadata commit.
 
-Change **Status** to `Approved` only after the checkbox is selected and the
-reviewer, date, and commit fields are complete. Planning approval authorizes
-issue preparation, not implementation.
+This approval authorizes issue preparation, not implementation.
