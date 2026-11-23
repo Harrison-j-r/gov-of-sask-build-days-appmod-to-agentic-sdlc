@@ -3,7 +3,7 @@
 ## Metadata
 
 - **Owner:** BookCatalog modernization participant
-- **Status:** Draft
+- **Status:** Approved
 - **Source root:** `legacy-src/dotnet-bookcatalog/shared-legacy-app`
 - **Related issue:** Not created
 
@@ -320,7 +320,7 @@ the specification before technical planning or implementation.
 - [x] Legacy missing-field and out-of-range-year validation checks are
       recorded; overlength and tokenless cases were not part of this baseline
       probe.
-- [ ] Human review and approval are pending.
+- [x] Human review and approval are recorded below.
 
 ### Stop conditions
 
@@ -341,12 +341,10 @@ Stop and request human guidance if:
 
 ### Human approval
 
-- [ ] I reviewed the evidence, unresolved questions, allowed paths, acceptance
+- [x] I reviewed the evidence, unresolved questions, allowed paths, acceptance
       criteria, validation command, exclusions, risks, and stop conditions.
-- **Reviewer:** Pending
-- **Approval date:** Pending
-- **Approved specification commit:** Not applicable; this draft is not committed.
+- **Reviewer:** @Harrison-j-r
+- **Approval date:** 2026-11-23
+- **Approved specification commit:** `9dfc4f4`
 
-Change **Status** to `Approved` only after review, resolution of the baseline
-question, and a recorded approval. Specification review does not authorize
-implementation or Azure deployment.
+This approval does not authorize implementation or Azure deployment.
