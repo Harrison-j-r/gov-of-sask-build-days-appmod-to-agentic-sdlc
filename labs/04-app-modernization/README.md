@@ -21,8 +21,15 @@ modernization tooling runs. `modernize assess` then contributes repository
 evidence, and `modernize plan create` turns the approved contract plus that
 evidence into a specialized technical modernization plan.
 
-The required sequence is: approved specification -> `modernize assess` ->
+The default interactive sequence is: approved specification -> `modernize assess` ->
 human-reviewed Modernize plan -> `upgrade-agent` execution.
+
+The optional [Modernize CI/CD route](../../scripts/modernization/README.md)
+keeps the same specification and technical-plan approval gates, but executes
+the runtime/framework slice through a manually dispatched workflow. It also
+provides weekly assessments and bounded GH-AW report triage after setup.
+Do not run the CI executor and the Copilot app Upgrade agent for the same plan.
+This alternative does not perform the lab's Azure deployment steps.
 
 A generated modernization plan is a proposal, not approval and not a second
 specification framework. Reconcile it against the durable specification before

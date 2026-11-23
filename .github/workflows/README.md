@@ -17,3 +17,18 @@ Follow [CONTRIBUTING.md](../../CONTRIBUTING.md) for compilation, lock-diff, and
 `actionlint` maintenance. Participant exercises start in
 [Lab 05](../../labs/05-agentic-workflows/) and
 [Lab 06](../../labs/06-automated-qa/).
+
+## Optional Modernize automation
+
+The two `modernize-assess-*.yml` workflows assess the tracks independently,
+weekly after setup or manually. `modernize-triage.md` consumes verified reports
+and may propose one advisory issue; it does not activate implementation.
+The two `modernize-upgrade-*.yml` workflows require a manual request and a
+human-reviewed specification/plan before producing a validated draft PR.
+
+Read the [setup and operating guide](../../scripts/modernization/README.md)
+before configuring credentials or enabling `MODERNIZE_ENABLED`. Model execution,
+candidate validation, and PAT-backed publication are separate jobs. Legacy CI
+selects fixed baseline/target profiles and has stable final status checks.
+Existing issue-to-PR, CI remediation, and draft-excluding PR QA behavior is
+unchanged.

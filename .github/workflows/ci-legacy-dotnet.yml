@@ -5,12 +5,18 @@ on:
     paths:
       - "legacy-src/dotnet-bookcatalog/**"
       - "scripts/validation/validate-dotnet.*"
+      - "scripts/validation/validate-dotnet-target.ps1"
+      - "scripts/validation/Test-BookCatalogSmoke.ps1"
+      - "scripts/modernization/**"
       - ".github/workflows/ci-legacy-dotnet.yml"
   push:
     branches: [main]
     paths:
       - "legacy-src/dotnet-bookcatalog/**"
       - "scripts/validation/validate-dotnet.*"
+      - "scripts/validation/validate-dotnet-target.ps1"
+      - "scripts/validation/Test-BookCatalogSmoke.ps1"
+      - "scripts/modernization/**"
       - ".github/workflows/ci-legacy-dotnet.yml"
   workflow_dispatch:
 
@@ -22,8 +28,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  profile:
+    runs-on: ubuntu-latest
+    outputs:
+      profile: ${{ steps.profile.outputs.profile }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Select the supported project profile
+        id: profile
+        shell: pwsh
+        run: .\scripts\modernization\Get-ValidationProfile.ps1 -Track dotnet
+
   build:
     name: Build .NET Framework 4.8 with Visual Studio 2022
+    needs: profile
+    if: needs.profile.outputs.profile == 'baseline'
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
@@ -47,3 +68,48 @@ jobs:
       - name: Build imported baseline
         shell: powershell
         run: .\scripts\validation\validate-dotnet.ps1 -Configuration Release
+
+  target:
+    name: Verify .NET 10 and BookCatalog behavior
+    needs: profile
+    if: needs.profile.outputs.profile == 'target'
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - name: Run Release build and synthetic behavior checks
+        shell: pwsh
+        run: |
+          .\scripts\validation\validate-dotnet-target.ps1 `
+            -EvidenceDirectory (Join-Path $env:RUNNER_TEMP 'dotnet-validation')
+
+  result:
+    name: Legacy .NET validation
+    if: always()
+    needs: [profile, build, target]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require the selected profile's real checks
+        shell: pwsh
+        env:
+          PROFILE: ${{ needs.profile.outputs.profile }}
+          PROFILE_RESULT: ${{ needs.profile.result }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          TARGET_RESULT: ${{ needs.target.result }}
+        run: |
+          if ($env:PROFILE_RESULT -ne 'success') { throw 'BookCatalog profile selection failed.' }
+          if ($env:PROFILE -eq 'baseline') {
+            if ($env:BUILD_RESULT -ne 'success' -or $env:TARGET_RESULT -ne 'skipped') {
+              throw 'BookCatalog baseline build evidence is incomplete or failed.'
+            }
+            Write-Output 'Baseline build passed; this is not automated CRUD coverage.'
+          } elseif ($env:PROFILE -eq 'target') {
+            if ($env:TARGET_RESULT -ne 'success' -or $env:BUILD_RESULT -ne 'skipped') {
+              throw 'BookCatalog target behavior evidence is incomplete or failed.'
+            }
+          } else { throw 'Unsupported BookCatalog profile.' }

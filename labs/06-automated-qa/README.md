@@ -20,6 +20,12 @@ The workflows use GitHub Copilot and GitHub Agentic Workflows (`gh-aw`).
 > or disposable repository. This lab compiles and validates the workflows but
 > does **not** dispatch them or perform any live GitHub write.
 
+The optional [Modernize CI/CD route](../../scripts/modernization/README.md)
+also demonstrates target-aware gates: preserve the imported baseline checks
+until an app is upgraded, then require its fixed target checks. Its upgrade
+PRs stay drafts, so this lab's existing advisory PR QA starts only after a
+human marks a PR ready.
+
 ## Learning objectives
 
 By the end of the lab, you can:
