@@ -75,6 +75,31 @@ Everything lives in this one repository: the imported apps, labs, specs,
 Copilot customizations, automation, capstone starters, and facilitator notes.
 That keeps links and validation commands working from a single checkout.
 
+## Open the interactive lab guide
+
+[**Open the lab guide in GitHub Copilot**](https://github.com/copilot/app/launch?open=ghapp%3A%2F%2Fsession%2Fnew%3Frepo%3DVeVarunSharma%252Fgov-of-sask-build-days-appmod-to-agentic-sdlc%26mode%3Dinteractive%26prompt%3DOpen%2520the%2520Build%2520Day%2520lab%2520guide%2520canvas.%2520Do%2520not%2520run%2520any%2520lab%2520commands.)
+
+Requires a canvas-capable GitHub Copilot app. The link prepares a new interactive
+session for this repository with the opening prompt filled in. Review and
+submit the prompt to open the canvas; it does not run lab commands.
+
+The guide is included in this repository at
+[`.github/extensions/lab-journey/`](.github/extensions/lab-journey/README.md).
+Fork or clone the complete repository, open it in the app, and start a new
+session. The project extension is discovered without a separate SDK package
+installation. It provides animated steps, Java/.NET track selection, copy
+buttons, and private progress saved on your machine.
+
+Already in a session, or using your own fork? Ask:
+
+```text
+Open the Build Day lab guide canvas. Do not run any lab commands.
+```
+
+[Setup and project-install instructions](.github/extensions/lab-journey/README.md#install-the-guide)
+include the manual install route and troubleshooting. The
+[Markdown labs](labs/README.md) remain available without the canvas.
+
 ## 🤖 How Copilot picks up guidance
 
 Copilot reads several kinds of guidance in this repository: the repository-wide

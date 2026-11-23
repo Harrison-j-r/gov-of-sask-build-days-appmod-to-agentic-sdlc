@@ -80,6 +80,30 @@ test("fenced examples do not become headings or empty steps", () => {
     assert.ok(parsed[0].body.includes("## Fake"));
 });
 
+test("repository distribution includes all assets and a safe documented README launcher", async () => {
+    const extension = new URL("../", import.meta.url);
+    const manifest = JSON.parse(await readFile(new URL("copilot-extension.json", extension), "utf8"));
+    assert.deepEqual(manifest, { name: "lab-journey", version: 1 });
+    for (const file of ["extension.mjs", "guide.mjs", "progress.mjs", "server.mjs", "index.html", "app.js", "style.css"]) {
+        assert.ok((await readFile(new URL(file, extension), "utf8")).length > 0, `Included asset: ${file}`);
+    }
+    const readme = await readSource(root, "README.md");
+    const href = /\[.*Open the lab guide in GitHub Copilot.*\]\((https:\/\/github\.com\/copilot\/app\/launch[^)]+)\)/.exec(readme)?.[1];
+    assert.ok(href, "Prominent README launcher");
+    const app = new URL(new URL(href).searchParams.get("open"));
+    assert.equal(app.protocol, "ghapp:");
+    assert.equal(app.host, "session");
+    assert.equal(app.pathname, "/new");
+    assert.equal(app.searchParams.get("repo"), "VeVarunSharma/gov-of-sask-build-days-appmod-to-agentic-sdlc");
+    assert.equal(app.searchParams.get("mode"), "interactive");
+    assert.equal(app.searchParams.get("prompt"), "Open the Build Day lab guide canvas. Do not run any lab commands.");
+    assert.deepEqual([...app.searchParams.keys()].sort(), ["mode", "prompt", "repo"]);
+    assert.ok(!href.includes("127.0.0.1"));
+    const setup = await readFile(new URL("README.md", extension), "utf8");
+    assert.match(setup, /project scope/);
+    assert.match(setup, /Installing only this folder into an unrelated/);
+});
+
 test("source access refuses traversal, arbitrary files, and facilitator solutions", async () => {
     for (const source of ["../README.md", ".github/copilot-instructions.md", "facilitator/reference-solutions/copilot/README.md", null]) {
         await assert.rejects(readSource(root, source), { code: "source_not_allowed" });

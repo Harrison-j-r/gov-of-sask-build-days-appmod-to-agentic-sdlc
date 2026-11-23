@@ -5,7 +5,39 @@ follow source-backed steps, copy exercise blocks, and save private,
 self-reported progress. The [Markdown lab index](../../../labs/README.md)
 remains the fallback and the lab documents remain authoritative.
 
+## Install the guide
+
+**Repository users:** no separate extension download is needed. Fork or clone
+the complete workshop repository, open that checkout in the GitHub Copilot app,
+and start a new session. The app's runtime discovers
+`.github/extensions/lab-journey/extension.mjs` and its companion files.
+Approve repository trust or extension permissions if the app requests them.
+No `npm install` or separate Copilot SDK package is required for the guide.
+
+**Manual project install:** if the extension folder is missing from an existing
+workshop checkout, ask Copilot in that checkout:
+
+```text
+Install the canvas extension from
+https://github.com/VeVarunSharma/gov-of-sask-build-days-appmod-to-agentic-sdlc/tree/main/.github/extensions/lab-journey
+with project scope and the name lab-journey. Do not change the lab documents.
+```
+
+Review the installation before approving it, then open the guide below.
+Choose project scope, not a personal/global install: the guide reads the
+workshop's local README and labs. Installing only this folder into an unrelated
+repository is not supported. During PR review, use the PR's head branch as the
+source instead of `main`; the published `main` route is available after merge.
+
+Keep the entire extension folder, including renderer assets and the
+`copilot-extension.json` sharing manifest. If sharing it through the app's
+**Share extension as gist** flow, the recipient still needs the full workshop
+checkout and should choose project scope when installing.
+
 ## Open the guide
+
+Use the [README launch link](../../../README.md#open-the-interactive-lab-guide),
+or open it from your existing workshop session:
 
 1. Open your workshop checkout in a canvas-capable GitHub Copilot app.
 2. Start a new session, or ask Copilot to reload extensions.
@@ -16,6 +48,19 @@ remains the fallback and the lab documents remain authoritative.
 The canvas type is `lab-journey`. It exposes `get_guide`, `get_progress`, and
 `update_progress` actions. Updates require the current revision and never
 execute or validate participant exercises.
+
+The README link uses GitHub's
+[documented hosted launcher](https://docs.github.com/copilot/how-tos/github-copilot-app/open-with-deep-links).
+It prepares a new interactive session with a safe opening prompt. Review and
+submit that prompt; there is no documented public canvas-instance deep link.
+No private session ID or temporary loopback address is shared.
+
+If the canvas is missing, confirm that your checkout contains the full
+`.github/extensions/lab-journey/` folder and the local `labs/` documents.
+Ask Copilot to reload extensions and inspect `lab-journey`, then repeat the
+opening prompt. Start a new session if your runtime has not refreshed its
+canvas catalog. Resolve any trust or permission prompt in the app; do not
+disable safeguards. Use the Markdown lab index if your app cannot render canvases.
 
 ## Use the guide
 
@@ -99,13 +144,18 @@ safety, navigation, reset/resume, narrow layout, themes, and reduced motion.
 Use `LAB_GUIDE_BROWSER` for another installed Playwright browser channel or
 `LAB_GUIDE_BROWSER_PATH` for an explicit browser executable path.
 
-Authoring checks observed on Windows: all 13 core tests and the real Edge
+Authoring checks observed on Windows: all 14 core tests and the real Edge
 browser gate passed. Module syntax, whitespace, and changed Markdown local
 targets passed. Runtime discovery/open/actions, invalid-input and reserved
 action rejection, and saved motion preference across provider reload and a
 second panel were verified. Lychee was unavailable; its full offline fragment
 gate was not run. No application builds, Azure deployment, or live workflows
 were performed for this navigation-only change.
+
+The distribution check verifies included assets, the sharing manifest, and
+the README launcher's decoded repository, mode, and safe opening prompt.
+The app's confirmation and prompt submission are user-controlled; these
+checks do not claim an automated browser-to-app handoff test.
 
 ## Branding and limitations
 

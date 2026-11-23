@@ -44,6 +44,7 @@ participants to follow one of two alternative application tracks.
 | FR-6 | Restore state across sessions and panels; reject stale updates and require confirmation for reset. | Prevent lost progress |
 | FR-7 | Offer an animated journey map, completion feedback, light/dark themes, reduced motion, and keyboard access. | Confirmed interactive-design scope |
 | FR-8 | Provide safe read-only views of participant source material and links to existing capstone pathways. | [Capstone](../labs/07-capstone/README.md) |
+| FR-9 | Expose repository discovery, project-install instructions, and a documented README launcher that prefills a safe opening prompt. | Direct request to make the guide accessible to repository users |
 
 ## Constraints and out of scope
 
@@ -53,6 +54,7 @@ participants to follow one of two alternative application tracks.
   - `.github/extensions/lab-journey/**`
   - `specs/lab-journey-canvas.md`
   - `labs/README.md`
+  - `README.md`, limited to the guide launch/setup entry point
 - **Primary validation command:** From repository root:
   `node --test .github\extensions\lab-journey\tests\lab-journey.test.mjs`
 - **Compatibility:** Existing lab documents remain authoritative and usable
@@ -178,6 +180,18 @@ participants to follow one of two alternative application tracks.
 - **Verification:** Node HTTP/rendering/lifecycle tests and installed-runtime
   capability/open/action/error checks.
 
+### AC-9: Repository access and launch
+
+- **Given** a full workshop checkout or a project installation of the extension,
+- **When** the user follows the README launch/setup entry point,
+- **Then** the guide's complete assets and sharing manifest are present, the
+  launcher targets this repository in interactive mode with a copy-only
+  canvas-opening prompt, and manual instructions support existing sessions
+  and forks without exposing private session IDs or local server URLs.
+- **Verification:** Package/manifest checks, launcher decoding assertions, and
+  local documentation link checks. Browser-to-app confirmation remains a
+  user-controlled handoff, not automatic execution.
+
 ## Non-functional requirements
 
 | ID | Quality | Testable requirement | Verification |
@@ -246,3 +260,5 @@ success-shaped defaults or self-reported completion.
 
 The initial drafting-plan approval authorized only specification preparation.
 The subsequent instruction to implement authorizes the bounded extension work.
+The later direct request for repository installation/access and a README
+opening link authorizes the launch/setup documentation and sharing manifest.
