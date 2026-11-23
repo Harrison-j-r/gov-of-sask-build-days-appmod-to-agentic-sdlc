@@ -11,6 +11,8 @@ nearest local guide; do not assume one file automatically overrides another.
 - `tests/WorkItems.Api.Tests/` contains the xUnit repository tests.
 - The shared API shape is owned by
   [`../contracts/openapi.yml`](../contracts/openapi.yml).
+- Repository behavior tests should follow `tests/WorkItems.Api.Tests/InMemoryWorkItemRepositoryTests.cs`
+  and the production seam in `src/WorkItems.Api/InMemoryWorkItemRepository.cs`.
 
 ## Work and validate
 
