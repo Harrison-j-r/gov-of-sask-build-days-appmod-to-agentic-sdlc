@@ -31,7 +31,8 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
 1. Move the sample to one .NET 10 ASP.NET Core MVC host using EF Core, without
    carrying forward the legacy System.Web host.
 2. Preserve the catalog workflows and validation while removing the
-   User-Agent diagnostic.
+   User-Agent diagnostic, and let users opt into showing inactive books with
+   an unchecked-by-default checkbox.
 3. Use a new, disposable workshop database and verify the upgraded app locally
    before considering any optional deployment.
 
@@ -40,6 +41,9 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
 - The target Release build and the repository's .NET target validator pass.
 - The validator's synthetic-data checks pass for catalog filtering, ordering,
   CRUD, input validation, antiforgery, and restart persistence.
+- A browser check confirms the `Include inactive books` checkbox is unchecked
+  by default and, when selected, makes inactive books available to view and
+  edit.
 - After implementation, the `change-scope-audit` skill reports **PASS** against
   this approved specification before review or merge. **PASS WITH RISKS** or
   **BLOCKED** requires the identified gaps to be resolved before this measure
@@ -51,8 +55,8 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
 
 | ID | Requirement | Evidence or rationale |
 | --- | --- | --- |
-| FR-1 | The root route and `/Books` shall display active books in ascending title order. On a freshly initialized workshop database, show six active seed books and hide the inactive Matrix record. | [`RouteConfig`](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/App_Start/RouteConfig.cs), [`BooksController.Index`](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/Controllers/BooksController.cs), [`BookCatalogInitializer.SeedBooks`](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/Models/ApplicationDbContext.cs) |
-| FR-2 | Users shall be able to view details, create, edit, and delete books. Missing book IDs for details and edit shall return 404; deleting a missing ID shall not cause an unhandled error. | [`BooksController`](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/Controllers/BooksController.cs) |
+| FR-1 | The root route and `/Books` shall display active books in ascending title order by default. An `Include inactive books` checkbox shall be unchecked by default; when selected, the list shall include active and inactive books in ascending title order. A fresh workshop database shall show six active seed books by default and hide the inactive Matrix record until the checkbox is selected. | [`RouteConfig`](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/App_Start/RouteConfig.cs), [`BooksController.Index`](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/Controllers/BooksController.cs), [`BookCatalogInitializer.SeedBooks`](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/Models/ApplicationDbContext.cs); user-requested checkbox behavior |
+| FR-2 | Users shall be able to view details, create, edit, and delete books. Inactive books shall be available for these actions when included in the catalog using the checkbox. Missing book IDs for details and edit shall return 404; deleting a missing ID shall not cause an unhandled error. | [`BooksController`](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/Controllers/BooksController.cs); participant-reported inability to find an inactive book through the current catalog |
 | FR-3 | Book validation shall preserve required Title and Author, their 200- and 100-character limits, the 13-character ISBN limit, and the optional Published Year range 1800 through 2100. Invalid submissions shall not change the catalog and shall show validation feedback. | [`Book`](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/Models/Book.cs), [Create.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/Views/Books/Create.cshtml), [Edit.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/Views/Books/Edit.cshtml) |
 | FR-4 | State-changing create, edit, and delete requests shall retain antiforgery protection. | [`BooksController`](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/Controllers/BooksController.cs), [Create.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/Views/Books/Create.cshtml), [Edit.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/Views/Books/Edit.cshtml) |
 | FR-5 | The catalog page shall not read or render the request User-Agent or a browser diagnostic label. | User decision; current reads are in [`BooksController.Index`](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/Controllers/BooksController.cs) and rendering is in [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCatalog.Web/Views/Books/Index.cshtml). |
@@ -132,7 +136,8 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
 
 | Type | Condition | Expected behavior |
 | --- | --- | --- |
-| Normal | Fresh synthetic database with six active seeds and one inactive Matrix seed | Only the six active books appear, in ascending title order. |
+| Normal | Fresh synthetic database with six active seeds and one inactive Matrix seed; checkbox is unchecked | Only the six active books appear, in ascending title order. |
+| Boundary | User selects `Include inactive books` | Active and inactive books appear in ascending title order with their existing view/edit/delete actions; changing the filter alone does not change book data. |
 | Failure | Invalid required text, length, or year values are submitted | Validation feedback appears and the catalog remains unchanged. |
 | Boundary | A request has an absent or distinctive User-Agent value | No User-Agent value or browser diagnostic label is read or rendered. |
 | Compatibility | A requested book ID does not exist | Details and edit return 404; delete does not produce an unhandled error. |
@@ -142,17 +147,30 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
 
 ## Acceptance criteria
 
-### AC-1: Active catalog and routes are preserved
+### AC-1: Active catalog remains the default
 
 - **Given** a fresh, synthetic `BookCatalogModernizedLab` database with the
   deterministic seed set
-- **When** a user opens `/` or `/Books`
+- **When** a user opens `/` or `/Books` without selecting `Include inactive
+  books`
 - **Then** six active books appear in ascending title order and the inactive
-  Matrix record does not appear
+  Matrix record does not appear, and the checkbox is unchecked
 - **Verification:** Run the primary validation command and record its actual
   smoke-check result.
 
-### AC-2: CRUD and missing-record behavior are preserved
+### AC-2: Users can include and manage inactive books
+
+- **Given** an inactive book exists and `Include inactive books` is unchecked
+- **When** a user selects the checkbox and submits the catalog filter
+- **Then** inactive and active books appear in ascending title order, and the
+  inactive book has working view/edit/delete actions; editing its Active value
+  can return it to the default active catalog
+- **Verification:** In a browser, confirm the checkbox starts unchecked, the
+  inactive seed or a synthetic inactive book is hidden by default and appears
+  when selected, its view/edit actions work, and changing its Active value
+  changes whether it appears when the filter is unchecked
+
+### AC-3: CRUD and missing-record behavior are preserved
 
 - **Given** the local application is running against the new lab database
 - **When** a user views, creates, edits, and deletes a synthetic book
@@ -161,7 +179,7 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
 - **Verification:** The target smoke script exercises create, details, edit,
   delete, and missing IDs; record its actual result.
 
-### AC-3: Validation and antiforgery remain effective
+### AC-4: Validation and antiforgery remain effective
 
 - **Given** a create or edit request has missing or over-limit title/author,
   an over-limit ISBN, an out-of-range year, or no valid antiforgery token
@@ -172,7 +190,7 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
 - **Verification:** Run the target validation command and record the actual
   synthetic HTTP check result.
 
-### AC-4: User-Agent diagnostic is removed
+### AC-5: User-Agent diagnostic is removed
 
 - **Given** a request to the catalog includes any User-Agent header
 - **When** the catalog page is rendered
@@ -181,7 +199,7 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
 - **Verification:** The source diff shows the diagnostic read/render removed;
   inspect a response containing a distinctive synthetic User-Agent.
 
-### AC-5: Workshop data persists without legacy transfer
+### AC-6: Workshop data persists without legacy transfer
 
 - **Given** a new `BookCatalogModernizedLab` database initialized by
   migrations with deterministic synthetic seed data
@@ -192,7 +210,7 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
   review migrations/configuration for the new database name, non-destructive
   startup, and absence of legacy-data transfer.
 
-### AC-6: Local target gate passes
+### AC-7: Local target gate passes
 
 - **Given** the .NET 10 SDK, PowerShell 7.4 or later, and Windows LocalDB are
   available
@@ -207,8 +225,8 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
 | ID | Quality | Testable requirement | Verification |
 | --- | --- | --- | --- |
 | NFR-1 | Data safety | Only the new disposable lab database is created or modified by local validation; legacy MDF and business databases are never used as target data. | Review connection configuration and migrations; verify the validation script uses and cleans its task-owned LocalDB instance. |
-| NFR-2 | Security/privacy | No SQL password, credential, or secret is committed; mutations retain antiforgery; the User-Agent diagnostic is removed. | Diff/config review and AC-3/AC-4 checks. |
-| NFR-3 | Reliability | Migrations initialize the lab database without deleting/recreating it on every startup; changes persist through restart. | Review startup/migration logic and verify AC-5. |
+| NFR-2 | Security/privacy | No SQL password, credential, or secret is committed; mutations retain antiforgery; the User-Agent diagnostic is removed. | Diff/config review and AC-4/AC-5 checks. |
+| NFR-3 | Reliability | Migrations initialize the lab database without deleting/recreating it on every startup; changes persist through restart. | Review startup/migration logic and verify AC-6. |
 | NFR-4 | Cost and operations | Azure is optional and gated by explicit ownership, budget, region, role, and exposure approval; created resources have exact cleanup evidence. | Review approval before deployment and independently verify the exact group no longer exists after cleanup. |
 
 ## Assumptions, dependencies, and risks
@@ -244,21 +262,29 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
   omitted the inactive Matrix record, and rendered the `YOUR BROWSER` line
   with the current browser's User-Agent. This was a page-load observation, not
   a check of CRUD or validation.
-- **Remaining manual-check record:** The participant reports that the manual
-  checks are complete; individual results have not been provided in this
-  session. Record the observed results for routes, details/create/edit/delete,
-  validation, and persistence after restart before approval. Do not infer
-  passing results from completion alone.
+- **Participant-reported manual checks:** The participant reports six books
+  displayed with row numbers 1-6, viewing several books, editing the first
+  book's year to 2009, successful book creation and deletion, and an inactive
+  book disappearing from the list with no visible catalog control to find it
+  again. The participant also reports that another created book displayed row
+  number 7. The source view uses an incrementing row counter, so this is a
+  display position rather than the database ID. A screenshot is available to
+  the participant but was not added to the repository. Individual outcomes
+  for invalid-input validation and persistence after restart were not stated;
+  do not infer passing results.
 - **Modernize assessment:** Not run. No CLI assessment findings are claimed.
-- **User decisions:** Remove the User-Agent diagnostic. Document Azure as an
-  optional later phase with explicit cost, permission, and cleanup gates; do
-  not deploy under this specification work.
+- **User decisions:** Remove the User-Agent diagnostic; add an unchecked-by-
+  default `Include inactive books` checkbox so users can reveal and manage
+  inactive books; document Azure as an optional later phase with explicit
+  cost, permission, and cleanup gates; do not deploy under this specification
+  work.
 
 ### Unresolved questions
 
-- Before specification approval, record the participant's manual-check
-  outcomes for routes, CRUD, validation, and restart persistence, or document
-  the exact checks that could not be observed and the reason.
+- Before specification approval, record whether invalid-input validation
+  rejected missing title/author and out-of-range years, and whether the edited
+  value persisted after an application restart. The participant's reported
+  completion alone does not establish these individual outcomes.
 - Azure subscription, region, budget, and role details are intentionally
   undecided. They are required only before a separately approved deployment.
 - The Modernize assessment has not been run. If it later provides evidence
@@ -266,8 +292,8 @@ and [Index.cshtml](../legacy-src/dotnet-bookcatalog/shared-legacy-app/src/BookCa
   boundaries, revise and reapprove this specification before technical
   planning or implementation.
 
-This draft is not ready for approval while the legacy behavior baseline lacks
-recorded manual-check outcomes or any assessment evidence would change its
+This draft is not ready for approval while the validation and restart-persistence
+outcomes remain unrecorded or any assessment evidence would change its
 contract.
 
 ### Boundary and validation review
@@ -283,7 +309,9 @@ contract.
       behavior, including the user-approved diagnostic removal.
 - [x] Exclusions prevent Java changes, legacy-data transfer, side-by-side
       hosting, secrets, and unapproved deployment.
-- [ ] Legacy runtime manual-check outcomes have been recorded.
+- [x] Participant-reported list and CRUD observations are recorded; the
+      available screenshot was not added to the repository.
+- [ ] Legacy validation and restart-persistence outcomes are recorded.
 - [ ] Human review and approval are pending.
 
 ### Stop conditions
