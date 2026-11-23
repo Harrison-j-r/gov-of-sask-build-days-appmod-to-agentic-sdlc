@@ -10,6 +10,8 @@ invokes it by name.
 | `maven-diagnostics` | Maven reactor, dependency, and test-failure triage |
 | `dotnet-msbuild-diagnostics` | Classic NuGet/MSBuild or SDK-style .NET triage |
 | `modernization-assessment-review` | Reviewing an assessment before planning |
+| `change-scope-audit` | Reconcile an approved specification with the implementation diff |
+| `test-evidence-inventory` | Inventory test evidence and smallest validation commands for one legacy track |
 
 Diagnostic scripts are read-only: they inspect manifests and reports but do not
 restore, build, update, publish, deploy, or edit the repository. Run the script
